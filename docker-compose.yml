@@ -6,10 +6,9 @@ services:
       dockerfile: ./dockerfile
     volumes:
       # - ./:/app
-      # - /app/node_modules
+      # - /app/vendor
     ports:
       - "8000:8000"
     environment:
-      # - NODE_ENV=development
       # - PORT=9000
     command: "npm run start"

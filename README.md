@@ -1,9 +1,9 @@
 <h1 align="center">Notes Web Service</h1>
 <p align="center">
-  <img src="https://seeklogo.com/images/N/nodejs-logo-FBE122E377-seeklogo.com.png" alt="NodeJS">
+  <img src="https://cdn.iconscout.com/icon/free/png-256/php-28-226043.png" alt="PHP">
 </p>
 
-### It's a fancy, optimal, minimalist and organized TypeScript/NodeJS "Notes Web Service" project; made with express and mongoose and has the following features:
+### It's a fancy, optimal, minimalist and organized PHP "Notes Web Service" project; made with Laravel and has the following features:
 
 - Layered/Hexagonal architecture implementation.
 - High cohesion and separation of concerns levels.
@@ -11,13 +11,14 @@
 - Separated app and server logic.
 - Central error handling with rotative file log system.
 - Extendable base error.
-- Gracefully exit in certain cases.
 - Base extendable environment config.
 - Single and group testable modules.
 - API versioning.
 - Database:
-  - MongoDB:
+  - MariaDB/MySQL, PosgreSQL, SQLServer y SQLite:
     - Seeders.
+    - Migrations.
+    - Factories.
 - JWT authentication.
 - Google authentication.
 - Mail handling.
@@ -25,26 +26,24 @@
 - Flexible search module.
 - Soft deleting and more...
 
-To initialize the project run ```npm install```.
+To initialize the project run ```composer install```.
 
 The base relational model looks like:
 <p align="center">
   <img src="reference-relational-model.png" alt="Relational Model">
 </p>
 
-There's a graph of structure or dependencies through the application:
+There's a graph of structure or dependencies through the application (from the JS version):
 <p align="center">
   <img src="dependency-graph.svg" alt="Graph">
 </p>
 
 Also the project contain in the root a postman collection with every application endpoint, ready to import and test.
 
-To start the application once initialized, you need to have installed TypeScript and compile the project, then if you want to run it with common node but without set ```NODE_ENV=production``` to you must use ```npm run start:dev```, if you want to start with nodemon you must run ```npm run dev``` and if you want to run it in production you must use ```npm run start```.
-
-If once you've configured your seeders (located in the path ```src/shared/services/database/mongodb/seeders```) you want to perform a seeding run ```npm run seed:mongodb```.
+To start the application once initialized you only have to run ```php artisan serve``` and the application will be served, the rest of commands work as usual in laravel.
 
 <h1 align="center">Other versions</h1>
 
 If you want to check the JavaScript version [click here]()
 
-If you want to check the PHP version [click here]()
+If you want to check the TypeScript version [click here]()
