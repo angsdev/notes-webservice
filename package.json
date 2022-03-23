@@ -1,0 +1,37 @@
+{
+  "name": "notes_webservice",
+  "version": "1.0.0",
+  "description": "Fancy, optimal, minimalist and organized NodeJS \"Notes Web Service\" project; made with express and mongoose.",
+  "main": "app.js",
+  "scripts": {
+    "start": "NODE_ENV=production node src/server",
+    "start:dev": "node src/server",
+    "dev": "nodemon src/server",
+    "seed:mongo": "node src/shared/services/database/mongodb/seeders"
+  },
+  "keywords": [],
+  "author": "Angel Quiñonez",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "config": "^3.3.7",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^15.0.0",
+    "express": "^4.17.2",
+    "express-validator": "^6.14.0",
+    "google-auth-library": "^7.12.0",
+    "helmet": "^5.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.10",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.7.2",
+    "rotating-file-stream": "^3.0.3",
+    "winston": "^3.6.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.7",
+    "eslint": "^8.8.0"
+  }
+}

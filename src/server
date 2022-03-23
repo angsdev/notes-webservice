@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+/*============================ Imports ============================*/
+require('dotenv/config');
+const { port } = require('config').get('server');
+/*============================ Imports ============================*/
+const app = require('./app');
+const { Server } = require('./shared').classes;
+/*=========================== Rest =============================*/
+
+new Server(port).listen(app);
+
