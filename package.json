@@ -4,10 +4,10 @@
   "description": "Fancy, optimal, minimalist and organized NodeJS \"Notes Web Service\" project; made with express and mongoose.",
   "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=production node src/server",
-    "start:dev": "node src/server",
-    "dev": "nodemon src/server",
-    "seed:mongo": "node src/shared/services/database/mongodb/seeders"
+    "start": "NODE_ENV=production node dist/server",
+    "start:dev": "node dist/server",
+    "dev": "nodemon dist/server",
+    "seed:mongo": "node dist/shared/services/database/mongodb/seeders"
   },
   "keywords": [],
   "author": "Angel Quiñonez",
@@ -32,6 +32,21 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-alpha.7",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/compression": "^1.7.2",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/config": "^0.0.41",
+    "@types/cors": "^2.8.12",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.13",
+    "@types/express-validator": "^3.0.0",
+    "@types/helmet": "^4.0.0",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^17.0.21",
+    "@types/nodemailer": "^6.4.4",
+    "@types/winston": "^2.4.4",
     "eslint": "^8.8.0"
   }
 }
