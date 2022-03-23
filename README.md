@@ -44,6 +44,6 @@ To start the application once initialized you only have to run ```php artisan se
 
 <h1 align="center">Other versions</h1>
 
-If you want to check the JavaScript version [click here]()
+If you want to check the JavaScript version [click here](https://github.com/angsdev/notes_web_service/tree/JavaScript)
 
-If you want to check the TypeScript version [click here]()
+If you want to check the TypeScript version [click here](https://github.com/angsdev/notes_web_service/tree/TypeScript)
