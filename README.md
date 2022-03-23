@@ -45,6 +45,6 @@ If once you've configured your seeders (located in the path ```src/shared/servic
 
 <h1 align="center">Other versions</h1>
 
-If you want to check the JavaScript version [click here]()
+If you want to check the JavaScript version [click here](https://github.com/angsdev/notes_web_service/tree/JavaScript)
 
-If you want to check the PHP version [click here]()
+If you want to check the PHP version [click here](https://github.com/angsdev/notes_web_service/tree/PHP)
