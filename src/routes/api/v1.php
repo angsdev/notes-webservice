@@ -1,7 +1,7 @@
 <?php
 
-// use GuzzleHttp\Middleware;
-// use Illuminate\Http\Request;
+use GuzzleHttp\Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\V1\Auth\Infrastructure\Controller as AuthController;
 use Modules\V1\Users\Infrastructure\Controller as UserController;
@@ -21,7 +21,6 @@ use Modules\V1\NoteTypes\Infrastructure\Controller as NoteTypeController;
 */
 
 
-Route::apiResource('users', UserController::class);
 
 Route::middleware('guest')->prefix('auth')->group(function(){
 
@@ -52,7 +51,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
     /** Resources endpoints */
     Route::apiResources([
-      // 'users' => UserController::class,
+      'users' => UserController::class,
       'notes/types' => NoteTypeController::class,
       'notes' => NoteController::class
     ]);
