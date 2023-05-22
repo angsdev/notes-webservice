@@ -1,5 +1,5 @@
 /*============================ Imports ============================*/
-import BaseError from './BaseError';
+import BaseError from '../errors/BaseError';
 import { verifyJWT } from '../utils';
 import { NextFunction, Request, Response } from 'express';
 /*============================ Rest ============================*/

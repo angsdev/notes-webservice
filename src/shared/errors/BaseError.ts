@@ -1,3 +1,4 @@
+import { BaseErrorOptions } from '../interfaces/global.types';
 /*============================ Rest ============================*/
 
 export default class BaseError extends Error {
@@ -8,12 +9,8 @@ export default class BaseError extends Error {
 
   /**
    * Create a new base error instance.
-   * @param {string} name
-   * @param {string} message
-   * @param {number} status
-   * @param {boolean} isOperational
    */
-  constructor(name: string, message: string = 'There was an error.', status: number, isOperational: boolean = true){
+  constructor({ name, message = 'There was an error.', status, isOperational = true } : BaseErrorOptions){
 
     super(message);
     this.name = name;

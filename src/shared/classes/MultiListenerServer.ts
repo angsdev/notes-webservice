@@ -1,36 +1,36 @@
 /*============================ Imports ============================*/
 import http from 'http';
+import { MultiListenerServerOptions } from '../interfaces';
 /*=========================== Rest =============================*/
 
-export default class Server {
+export default class MultiListenerServer {
 
-  protected httpServer: http.Server;
-  public port: number;
+  protected server: http.Server;
+  public port: string|number;
 
   /**
    * Create a new server instance.
-   * @param {number} port
-   * @param {object} options
    */
-  constructor(port: number = 80, options: http.ServerOptions = {}){
+  constructor({ port = 80, options } : MultiListenerServerOptions){
 
-    this.httpServer = new http.Server(options);
+    this.server = new http.Server(options);
     this.port = port;
   }
 
   /**
-   * Start listening the server requests.
-   * @param {function} requestListener
+   * Start listening the requests from the source indicated.
+   * @param {http.RequestListener} requestListener
    * @returns {this}
    */
-  listen(requestListener?: http.RequestListener){
+  listen(requestListener: http.RequestListener) : this {
 
-    this.httpServer.addListener('request', requestListener);
-    this.httpServer.listen(this.port, () => console.info('Server initialized.'))
-        .on('error', (err: any) => {
+    this.server.addListener('request', requestListener);
+    this.server.listen(this.port, () => console.info('Server initialized.'))
+        .on('error', (err: Error & any) => {
 
           if(err.syscall !== 'listen') throw err;
-          const bind = (typeof this.port === 'string') ? `Pipe ${this.port}` : `Port ${this.port}`;
+          const bind = (typeof this.port === 'string') ? `Pipe: ${this.port}` : `Port: ${this.port}`;
+
           /********* handle specific listen errors with friendly messages *********/
           switch(err.code){
             case 'EACCES':
@@ -46,8 +46,8 @@ export default class Server {
         })
         .on('listening', () => {
 
-          const addr = this.httpServer.address();
-          const bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr?.port}`;
+          const address = this.server.address();
+          const bind = (typeof address === 'string') ? `Pipe: ${address}` : `Port: ${address?.port}`;
           console.info(`Listening on ${bind}.`);
         });
     return this;

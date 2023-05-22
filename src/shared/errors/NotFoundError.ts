@@ -6,11 +6,9 @@ export default class NotFoundError extends BaseError {
 
   /**
    * Create a new not found error instance.
-   * @param {string} message
-   * @param {number} status
    */
-  constructor(message: string = 'Bad Request.', status: number = 400){
+  constructor(message: string = 'Resource Not found.'){
 
-    super('NOT_FOUND', message, status);
+    super({ name: 'NOT_FOUND', message, status: 404 });
   }
 }

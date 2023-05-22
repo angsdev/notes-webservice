@@ -1,18 +1,20 @@
 /*============================ Imports ============================*/
-import Logger from './CustomLogger';
+// import Logger from '../classes/CustomLogger';
+import { CustomLogger } from '../loggers';
+
 import BaseError from './BaseError';
 /*============================ Rest ============================*/
 
 export default class ErrorHandler {
 
-  public logger: Logger;
+  public logger: CustomLogger;
 
   /**
    * Create a error handler instance.
    */
   constructor(){
 
-    this.logger = new Logger();
+    this.logger = new CustomLogger();
   }
 
   /**

@@ -3,7 +3,7 @@
 import * as rfs from 'rotating-file-stream';
 /*============================ Rest ============================*/
 
-export default class Logger {
+export default class CustomLogger {
 
   // private logger: fs.WriteStream = fs.createWriteStream('error.log', { flags: 'a' });
   private logger: rfs.RotatingFileStream = rfs.createStream('error.log', { path: './dist/storage/logs', compress: 'gzip', interval: '1d', maxFiles: 7 });
