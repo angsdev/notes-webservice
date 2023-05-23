@@ -1,13 +1,13 @@
 /*============================ Imports ============================*/
-import * as T from "../../../types";
+import { MailMetaData }from "../../../types";
 /*============================ Rest ============================*/
 
 /**
  * Template for verify email.
- * @param {object} data
+ * @param {MailMetaData} data
  * @returns {string}
  */
-export const verifyEmailTemplate = (data: T.MailTemplate): string => `
+export const verifyEmailTemplate = (data: MailMetaData): string => `
   <!DOCTYPE html>
   <html lang="en">
     <head>

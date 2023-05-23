@@ -1,4 +1,105 @@
+/*============================ Imports ============================*/
+import http from "http";
+
+
+
+/**** OLD ****/
 import { PopulateOptions, QueryOptions } from 'mongoose';
+/**** OLD ****/
+
+/*=========================== Rest =============================*/
+
+export interface ServerOptions {
+  port: string|number;
+  options?: http.ServerOptions
+}
+
+export interface BaseErrorOptions {
+  name: string;
+  message: string;
+  status: number;
+  isOperational?: boolean;
+}
+
+export interface FormattedLog {
+  datetime: Date|string;
+  log: string;
+  stackTrace: string;
+}
+
+export interface ConsoleMessageFormat {
+  info: string;
+  debug: string;
+  warn: string;
+  error: string;
+}
+
+export interface ObjectOfAnyValue {
+  [key: string]: any;
+}
+
+export type MailMetaData = {
+  version: string;
+  token: string;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**** OLD ****/
+
+
+export default interface IRepository {
+
+  /**
+   * Get all documents and it total.
+   * @param {object} options
+   * @returns {Promise<{ total: number; data: object[]; }>}
+   */
+  getAll(options: object): Promise<{ total: number; data: object; }>;
+
+  /**
+   * Get one document.
+   * @param {object} where
+   * @param {object} options
+   * @returns {Promise<object>}
+   */
+  getBy(where: object, options: object): Promise<object>;
+
+  /**
+   * Create one or more documents.
+   * @param {object} data
+   * @returns {Promise<object|object[]>}
+   */
+  create(data: object): Promise<object>;
+
+  /**
+   * Update one or more documents.
+   * @param {object} where
+   * @param {object} toUpdate
+   * @param {object} options
+   * @returns {Promise<object|object[]>}
+   */
+  update(where: object, toUpdate: object, options: object): Promise<object>;
+
+  /**
+   * Delete one or more documents.
+   * @param {object} where
+   * @param {object} options
+   * @returns {Promise<object|object[]>}
+   */
+  delete(where: object, options: object): Promise<object>;
+}
+
 
 export type ResourcesCollectionOptions = {
   page?: number;
@@ -32,8 +133,5 @@ export type MailHandler = {
   to: string;
 }
 
-export type MailTemplate = {
-  version: string;
-  token: string;
-  [x: string]: any;
-}
+
+/**** OLD ****/

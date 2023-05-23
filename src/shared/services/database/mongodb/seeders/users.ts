@@ -1,11 +1,10 @@
 /*============================ Imports ============================*/
 import * as bcrypt from 'bcryptjs';
-import { classes } from '../../../../';
+import { SeederBase } from '../../../../';
 import { faker } from '@faker-js/faker';
 import { v1 } from '../../../../../modules';
 /*============================ Vars setup ============================*/
 const { model } = v1.users.persistence.mongodb;
-const { SeederBase } = classes;
 /*============================ Rest ============================*/
 
 export default class UsersSeeder extends SeederBase {

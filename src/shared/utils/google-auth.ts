@@ -1,13 +1,13 @@
 /*============================ Imports ============================*/
-import { OAuth2Client } from 'google-auth-library';
+import { OAuth2Client, TokenPayload } from 'google-auth-library';
 /*============================ Rest ============================*/
 
 /**
- * Handle a google verification and return data.
- * @param {object} idToken
- * @returns {object}
+ * Handle a google authentication and return data.
+ * @param {string} idToken
+ * @returns {Promise<TokenPayload>}
  */
-export const googleVerify = async (idToken: string = '') => {
+export const googleAuth = async (idToken: string = ''): Promise<TokenPayload> => {
 
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
   const ticket = await client.verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID });

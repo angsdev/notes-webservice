@@ -1,13 +1,13 @@
 /*============================ Imports ============================*/
-import * as T from "../../../types";
+import { MailMetaData } from "../../../types";
 /*============================ Rest ============================*/
 
 /**
  * Template for password reset mail.
- * @param {object} data
+ * @param {MailMetaData} data
  * @returns {string}
  */
-export const resetPasswordTemplate = (data: T.MailTemplate): string => `
+export const resetPasswordTemplate = (data: MailMetaData): string => `
   <!DOCTYPE html>
   <html lang="en">
     <head>

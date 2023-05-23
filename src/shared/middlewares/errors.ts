@@ -1,33 +1,35 @@
 /*============================ Imports ============================*/
-import { NotFoundError, ErrorHandler } from '../classes';
+import { NotFoundError, ErrorHandler } from '../errors';
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import BaseError from '../errors/BaseError';
 /*============================ Vars setup ============================*/
 const errorHandler = new ErrorHandler();
 /*============================ Rest ============================*/
 
 /**
  * Middleware that throw an not found error.
- * @param {object} req
- * @param {object} res
- * @param {function} next
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
  * @returns {Promise<void>}
  */
 export const notFoundThrower = async (req: Request, res: Response, next: NextFunction): Promise<void> => next(new NotFoundError('Resource not found.'));
 
 /**
  * Middleware that handle error if any other can.
- * @param {object} err
- * @param {object} req
- * @param {object} res
- * @param {function} next
- * @returns {Promise<object>}
+ * @param {unknown} err
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ * @returns {Promise<void>}
  */
-export const fallback = async (err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const fallback: ErrorRequestHandler = async (err: unknown, req: Request, res: Response, next: NextFunction): Promise<void> => {
 
-  const message = errorHandler.familiarizeMessage(err);
-  res.status(err.status || 500).json({ success: false, message });
-  if(errorHandler.isTrustedError(err)) return next(err);
-  errorHandler.handle(err);
+  const error = err as Error & BaseError;
+  const message = errorHandler.familiarizeMessage(error);
+  res.status(error.status || 500).json({ success: false, message });
+  if(errorHandler.isTrustedError(error)) return next(error);
+  errorHandler.handle(error);
 };
 
 process.on('unhandledRejection', (reason) => { throw reason; });

@@ -1,44 +1,40 @@
 /*============================ Imports ============================*/
-// import Logger from '../classes/CustomLogger';
-import { CustomLogger } from '../loggers';
-
+import { CustomLogger as Logger } from '../loggers';
 import BaseError from './BaseError';
 /*============================ Rest ============================*/
 
 export default class ErrorHandler {
 
-  public logger: CustomLogger;
+  public logger: Logger;
 
   /**
    * Create a error handler instance.
    */
   constructor(){
 
-    this.logger = new CustomLogger();
+    this.logger = new Logger();
   }
 
   /**
    * Handle an error with specified logic.
-   * @param {object} err
+   * @param {Error | BaseError} err
    * @returns {void}
    */
-  handle(err: object): void {
+  handle(err: Error | BaseError): void {
 
     this.logger.debug(err, true);
   }
 
   /**
    * Make friendly error message depending on the error.
-   * @param {object} err
+   * @param {Error & BaseError} err
    * @returns {string}
    */
-  familiarizeMessage(err: any): string {
+  familiarizeMessage(err: Error & BaseError): string {
 
     switch(err.name){
-      case 'MongoServerError': switch(err.status){
-        case 11000: return 'The resource with unique identifiers already exists in the collection.';
-        default: return err.message;
-      }
+      case 'MongoServerError':
+        return this.handleMongoErrors(err);
       default:
         return err.message;
     }
@@ -46,11 +42,26 @@ export default class ErrorHandler {
 
   /**
    * Return if the error is trusted.
-   * @param {object} err
+   * @param {Error | BaseError} err
    * @returns {boolean}
    */
-  isTrustedError(err: object): Boolean {
+  isTrustedError(err: Error | BaseError): Boolean {
 
     return (err instanceof BaseError && err.isOperational);
+  }
+
+  /**
+   * Handle all the errors related to MongoDB in a custom way.
+   * @param {Error & BaseError} err
+   * @returns {string}
+   */
+  handleMongoErrors(err: Error & BaseError): string {
+
+    switch(err.status){
+      case 11000:
+        return 'The resource with unique identifiers already exists in the collection.';
+      default:
+        return err.message;
+    }
   }
 }

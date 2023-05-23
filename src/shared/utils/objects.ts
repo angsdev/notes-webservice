@@ -1,17 +1,18 @@
+import { ObjectOfAnyValue } from '../types';
 /*============================ Rest ============================*/
 
 /**
  * Filter an object from properties especifieds in a callback function.
- * @param {object} object
+ * @param {DifferentValuesObject} object
  * @param {function} filterCallback
- * @returns {object}
+ * @returns {DifferentValuesObject}
  */
-export const filterObject = (object: { [index: string]: any }, filterCallback: Function): object => {
+export const filterObject = (object: ObjectOfAnyValue, filterCallback: Function): ObjectOfAnyValue => {
 
   return Object
           .keys(object)
           .filter(key => filterCallback(object[key]))
-          .reduce((result: { [index: string]: any }, key) => {
+          .reduce((result: ObjectOfAnyValue, key) => {
             result[key] = object[key];
             return result;
           }, {});

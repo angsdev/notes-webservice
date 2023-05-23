@@ -11,13 +11,13 @@ const {
   search: { router: search },
   noteTypes: { router: noteTypes }
 } = v1;
-const { authentication } = middlewares;
+const { JWTAuthentication } = middlewares;
 /*=========================== Rest =============================*/
 
 router.use('/auth', auth)
-      .use('/users', authentication.JWT, users)
-      .use('/search', authentication.JWT, search)
-      .use('/notes(?!/types)', authentication.JWT, notes)
-      .use('/notes/types', authentication.JWT, noteTypes);
+      .use('/users', JWTAuthentication, users)
+      .use('/search', JWTAuthentication, search)
+      .use('/notes(?!/types)', JWTAuthentication, notes)
+      .use('/notes/types', JWTAuthentication, noteTypes);
 
 export default router;

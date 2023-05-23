@@ -1,9 +1,8 @@
 /*============================ Imports ============================*/
-import { classes } from '../../../../';
+import { SeederBase } from '../../../../';
 import { faker } from '@faker-js/faker';
 import { v1 } from '../../../../../modules';
 /*============================ Vars setup ============================*/
-const { SeederBase } = classes;
 const {
   notes: { persistence: { mongodb: { model } } },
   users: { persistence: { mongodb: { model: userModel } } },

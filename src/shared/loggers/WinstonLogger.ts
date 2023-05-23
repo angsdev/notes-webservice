@@ -8,6 +8,11 @@ export default class Logger {
     // level: 'trace',
     // levels: { fatal: 0, error: 1, warn: 2, info: 3, debug: 4, trace: 5 },
     transports: [
+      new transports.File({
+        level: 'error',
+        filename: './logs/error.log',
+        format: format.printf(({ timestamp, level, message, ...meta }) => JSON.stringify({timestamp, level, message, stack: meta.stack}))
+      }),
       new transports.Console({
         level: 'debug',
         handleExceptions: true,
@@ -16,8 +21,7 @@ export default class Logger {
           format.colorize({ colors: { fatal: 'red', error: 'red', warn: 'yellow', info: 'green', debug: 'green', trace: 'white' } }),
           format.printf(({ timestamp, level, message, ...meta }) => `${timestamp} ${level}: ${message} \n ${meta.stack}`)
         )
-      }),
-      new transports.File({ level: 'error', filename: './logs/error.log', format: format.printf(({ timestamp, level, message, ...meta }) => JSON.stringify({timestamp, level, message, stack: meta.stack})) })
+      })
     ]
   });
 
@@ -34,7 +38,7 @@ export default class Logger {
    * @param {*} meta
    * @returns {void}
    */
-  trace(message: string, meta: any){
+  trace(message: string, meta: any): void {
 
     this.logger.log('trace', message, meta);
   }
@@ -45,7 +49,7 @@ export default class Logger {
    * @param {*} meta
    * @returns {void}
    */
-  debug(message: string, meta: any){
+  debug(message: string, meta: any): void {
 
     this.logger.debug(message, meta);
   }
@@ -56,7 +60,7 @@ export default class Logger {
    * @param {*} meta
    * @returns {void}
    */
-  info(message: string, meta: any){
+  info(message: string, meta: any): void {
 
     this.logger.info(message, meta);
   }
@@ -67,7 +71,7 @@ export default class Logger {
    * @param {*} meta
    * @returns {void}
    */
-  warn(message: string, meta: any){
+  warn(message: string, meta: any): void {
 
     this.logger.warn(message, meta);
   }
@@ -78,7 +82,7 @@ export default class Logger {
    * @param {*} meta
    * @returns {void}
    */
-  error(message: string, meta: any){
+  error(message: string, meta: any): void {
 
     this.logger.error(message, meta);
   }
@@ -89,7 +93,7 @@ export default class Logger {
    * @param {*} meta
    * @returns {void}
    */
-  fatal(message: string, meta: any){
+  fatal(message: string, meta: any): void {
 
     this.logger.log('fatal', message, meta);
   }

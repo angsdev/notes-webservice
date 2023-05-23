@@ -1,9 +1,9 @@
 /*============================ Imports ============================*/
 import http from 'http';
-import { MultiListenerServerOptions } from '../interfaces';
+import { ServerOptions } from './types';
 /*=========================== Rest =============================*/
 
-export default class MultiListenerServer {
+export default class Server {
 
   protected server: http.Server;
   public port: string|number;
@@ -11,7 +11,7 @@ export default class MultiListenerServer {
   /**
    * Create a new server instance.
    */
-  constructor({ port = 80, options } : MultiListenerServerOptions){
+  constructor({ port = 80, options } : ServerOptions){
 
     this.server = new http.Server(options);
     this.port = port;
