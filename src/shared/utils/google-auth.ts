@@ -1,9 +1,7 @@
-/*============================ Imports ============================*/
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
-/*============================ Rest ============================*/
 
 /**
- * Handle a google authentication and return data.
+ * Handle a google authentication and return the data.
  * @param {string} idToken
  * @returns {Promise<TokenPayload>}
  */

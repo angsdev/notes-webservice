@@ -1,6 +1,4 @@
-/*============================ Imports ============================*/
 import winston, { createLogger, format, transports } from 'winston';
-/*============================ Rest ============================*/
 
 export default class Logger {
 

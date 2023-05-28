@@ -1,9 +1,8 @@
-/*============================ Imports ============================*/
 import config from 'config';
-import { classes } from '../../shared';
-/*============================ Vars setup ============================*/
-const { ValidatorBase } = classes;
-const { password } = config.get('app.standards');
+import { types } from '../../shared';
+import { ValidatorBase } from '../../shared';
+
+const { password }: types.ObjectOfAnyValue = config.get('app.standards');
 /*============================ Rest ============================*/
 
 export default new class AuthValidator extends ValidatorBase {

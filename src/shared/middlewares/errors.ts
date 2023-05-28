@@ -1,10 +1,7 @@
-/*============================ Imports ============================*/
-import { NotFoundError, ErrorHandler } from '../errors';
+import { BaseError, NotFoundError, ErrorHandler } from '../errors';
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import BaseError from '../errors/BaseError';
-/*============================ Vars setup ============================*/
+
 const errorHandler = new ErrorHandler();
-/*============================ Rest ============================*/
 
 /**
  * Middleware that throw an not found error.

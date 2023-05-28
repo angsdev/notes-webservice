@@ -1,7 +1,5 @@
-/*============================ Imports ============================*/
 import { isValidObjectId } from 'mongoose';
 import { ObjectOfAnyValue } from '../types';
-/*============================ Rest ============================*/
 
 /**
  * Generate an array to specify $or mongoose query _id field, and avoid ObjectId errors.

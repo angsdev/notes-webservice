@@ -1,7 +1,5 @@
-/*============================ Imports ============================*/
 import { CustomLogger as Logger } from '../loggers';
 import BaseError from './BaseError';
-/*============================ Rest ============================*/
 
 export default class ErrorHandler {
 
@@ -10,9 +8,10 @@ export default class ErrorHandler {
   /**
    * Create a error handler instance.
    */
-  constructor(){
+  constructor(err?: Error | BaseError){
 
     this.logger = new Logger();
+    if(err) this.handle(err);
   }
 
   /**

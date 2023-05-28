@@ -1,8 +1,7 @@
-/*============================ Imports ============================*/
 import { v1 } from '../../modules';
 import { Router } from 'express';
 import { middlewares } from '../../shared';
-/*============================ Vars setup ============================*/
+
 const router = Router();
 const {
   auth: { router: auth },
@@ -12,7 +11,6 @@ const {
   noteTypes: { router: noteTypes }
 } = v1;
 const { JWTAuthentication } = middlewares;
-/*=========================== Rest =============================*/
 
 router.use('/auth', auth)
       .use('/users', JWTAuthentication, users)

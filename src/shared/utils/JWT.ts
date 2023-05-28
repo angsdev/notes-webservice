@@ -1,7 +1,5 @@
-/*============================ Imports ============================*/
 import { sign, verify, SignOptions, JwtPayload } from 'jsonwebtoken';
 import { ObjectOfAnyValue } from '../types';
-/*============================ Rest ============================*/
 
 /**
  * Generate a Json Web Token and return it.

@@ -11,7 +11,7 @@ import { PopulateOptions, QueryOptions } from 'mongoose';
 
 export interface ServerOptions {
   port: string|number;
-  options?: http.ServerOptions
+  options?: http.ServerOptions;
 }
 
 export interface BaseErrorOptions {
@@ -38,11 +38,71 @@ export interface ObjectOfAnyValue {
   [key: string]: any;
 }
 
-export type MailMetaData = {
+export interface MailMetaData {
   version: string;
   token: string;
 }
 
+export interface PasswordValidationStandard {
+  minLength: number;
+  minNumbers: number;
+  minSymbols: number;
+  minUppercase: number;
+  minLowercase: number;
+}
+
+export interface ValidationStardard {
+  password: PasswordValidationStandard;
+}
+
+export interface ServiceConnectionConfig {
+  host: string;
+  port: string|number;
+}
+
+
+export interface SecuredServiceConnectionConfig extends ServiceConnectionConfig {
+  username?: string;
+  password?: string;
+}
+
+export interface DatabaseEnvironmentConfig extends ServiceConnectionConfig {
+  name: string;
+}
+
+export interface MailerEnvironmentConfig {
+  from: {
+    address: string;
+    name: string;
+  },
+  services: {
+    ethereal: ServiceConnectionConfig;
+  }
+}
+
+export interface AppEnvironmentConfig {
+  name: string;
+  validationStandards: ValidationStardard;
+}
+
+export interface ServerEnvironmentConfig extends ServiceConnectionConfig {
+  secretKey: string;
+}
+
+export interface EnvirontmentConfig {
+  app?: AppEnvironmentConfig;
+  server?: ServerEnvironmentConfig;
+  database?: {
+    mongodb?: DatabaseEnvironmentConfig;
+    mysql?: DatabaseEnvironmentConfig;
+  };
+  mail?: MailerEnvironmentConfig;
+  logger?: {
+    morgan?: {
+      format: string;
+    }
+  }
+}
 
 
 

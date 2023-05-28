@@ -1,9 +1,9 @@
-/*============================ Config ============================*/
+import { types } from '../shared';
 
 export = {
   app: {
     name: process.env.APP_NAME,
-    standards: {
+    validationStandards: {
       password: {
         minLength: 8,
         minNumbers: 1,
@@ -39,11 +39,13 @@ export = {
       address: process.env.MAIL_FROM_ADDRESS,
       name: process.env.MAIL_FROM_NAME
     },
-    ethereal: {
-      host: process.env.MAIL_ETHEREAL_HOST,
-      port: process.env.MAIL_ETHEREAL_PORT,
-      username: process.env.MAIL_ETHEREAL_USERNAME,
-      password: process.env.MAIL_ETHEREAL_PASSWORD
+    services: {
+      ethereal: {
+        host: process.env.MAIL_ETHEREAL_HOST,
+        port: process.env.MAIL_ETHEREAL_PORT,
+        username: process.env.MAIL_ETHEREAL_USERNAME,
+        password: process.env.MAIL_ETHEREAL_PASSWORD
+      }
     }
   },
   logger: {
@@ -51,4 +53,4 @@ export = {
       format: 'Status: :status - Method: :method - Endpoint: :url - :res[content-length] - :response-time ms'
     }
   }
-};
+} as types.EnvirontmentConfig;

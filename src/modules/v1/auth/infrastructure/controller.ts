@@ -50,8 +50,8 @@ export default new class AuthController {
 
     try{
 
-      const { token } = req.body;
-      const user = await service.google(token);
+      const { googleToken } = req.body;
+      const user = await service.google(googleToken);
       res.json({ success: true, content: user });
     } catch(err){ next(err); }
   }

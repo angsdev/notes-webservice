@@ -1,5 +1,4 @@
 import { BaseErrorOptions } from '../types';
-/*============================ Rest ============================*/
 
 export default class BaseError extends Error {
 

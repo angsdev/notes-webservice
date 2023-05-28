@@ -1,5 +1,4 @@
 import { ObjectOfAnyValue } from '../types';
-/*============================ Rest ============================*/
 
 /**
  * Filter an object from properties especifieds in a callback function.

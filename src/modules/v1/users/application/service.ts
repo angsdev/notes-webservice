@@ -4,12 +4,12 @@ import * as bcrypt from 'bcryptjs';
 import User from '../domain/entity';
 import IUser from '../domain/ientity';
 import * as persistence from '../infrastructure/persistence';
-import { classes, events, types as T, utils } from '../../shared';
+import { errors, events, types as T, utils } from '../../shared';
 /*============================ Vars setup ============================*/
 const { globalEvents } = events;
-const { NotFoundError } = classes;
+const { NotFoundError } = errors;
 const { mongodb: { repository } } = persistence;
-const { orField, verifyJWT, generateJWT, googleVerify } = utils;
+const { orField, verifyJWT, generateJWT, googleAuth } = utils;
 /*============================ Rest ============================*/
 
 export default new class UserService {
@@ -241,8 +241,21 @@ export default new class UserService {
    */
   async google(id_token: string){
 
-    const { given_name: firstname, family_name: lastname, email, sub: password } = await googleVerify(id_token);
-    const user: IUser = await this.getByEmail(email) || await this.create({ firstname, lastname, username: email.split('@')[0], email, password });
+    const { given_name: firstname, family_name: lastname, email, sub: password } = await googleAuth(id_token);
+    let user: IUser = await this.getByEmail(email);
+
+    if(!user || !bcrypt.compare(password, user.password)){
+
+      const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync());
+      user = await this.create({
+        firstname,
+        lastname,
+        username: email.split('@')[0],
+        email,
+        password: hashedPassword
+      });
+    }
+
     user.access_token = await generateJWT(user);
     return user;
   }

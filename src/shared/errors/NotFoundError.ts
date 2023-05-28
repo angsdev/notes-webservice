@@ -1,6 +1,4 @@
-/*============================ Imports ============================*/
 import BaseError from './BaseError';
-/*============================ Rest ============================*/
 
 export default class NotFoundError extends BaseError {
 
