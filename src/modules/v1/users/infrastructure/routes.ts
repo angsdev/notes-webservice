@@ -1,27 +1,33 @@
-/*============================ Imports ============================*/
 import { Router } from 'express';
-import validate from './validations';
-import controller from './controller';
-/*============================ Vars setup ============================*/
+import { validate } from '../../shared';
+import validationSchemas from './validations';
+import Controller from './controller';
+import { mongo } from './persistence';
+import { Service } from '../'
+
+
 const router = Router();
 const {
-  showAll, show, store, update, destroy,
-  showAllNotes, showNote, storeNote, updateNote, destroyNote
-} = controller;
-/*============================ Rest ============================*/
+  showAllSchema, showSchema, storeSchema, updateSchema, destroySchema,
+  showAllNotesSchema, showNoteSchema, storeNoteSchema, updateNoteSchema, destroyNoteSchema
+} = validationSchemas;
 
-router.get('/', validate.showAll, showAll)        /** All Users Route **/
-      .get('/:id', validate.show, show)           /** Specific User Route **/
-      .post('/', validate.store, store)           /** Store New User Route **/
-      .put('/:id', validate.update, update)       /** Update User Route **/
-      .patch('/:id', validate.update, update)     /** Update User Route **/
-      .delete('/:id', validate.destroy, destroy)  /** Delete User Route **/
+const repository = new mongo.Repository();
+const service = new Service(repository);
+const controller = new Controller(service);
+
+router.get('/', validate(showAllSchema), controller.showAll)
+      .get('/:id', validate(showSchema), controller.show)
+      .post('/', validate(storeSchema), controller.store)
+      .put('/:id', validate(updateSchema), controller.update)
+      .patch('/:id', validate(updateSchema), controller.update)
+      .delete('/:id', validate(destroySchema), controller.destroy)
       /** Nested Route: Notes **/
-      .get('/:id/notes', validate.showAllNotes, showAllNotes)         /** All User Notes Route  **/
-      .get('/:id/notes/:nid', validate.showNote, showNote)            /** Specific User Note Route  **/
-      .post('/:id/notes', validate.storeNote, storeNote)              /** Store New User Note Route **/
-      .put('/:id/notes/:nid', validate.updateNote, updateNote)        /** Update User Note Route **/
-      .patch('/:id/notes/:nid', validate.updateNote, updateNote)      /** Update User Note Route **/
-      .delete('/:id/notes/:nid', validate.destroyNote, destroyNote);  /** Delete User Note Route **/
+      .get('/:id/notes', validate(showAllNotesSchema), controller.showAllNotes)
+      .get('/:id/notes/:nid', validate(showNoteSchema), controller.showNote)
+      .post('/:id/notes', validate(storeNoteSchema), controller.storeNote)
+      .put('/:id/notes/:nid', validate(updateNoteSchema), controller.updateNote)
+      .patch('/:id/notes/:nid', validate(updateSchema), controller.updateNote)
+      .delete('/:id/notes/:nid', validate(destroyNoteSchema), controller.destroyNote);
 
 export default router;

@@ -1,12 +1,14 @@
-/*============================ Imports ============================*/
 import { Router } from 'express';
-import validate from './validations';
-import controller from './controller';
-/*============================ Vars setup ============================*/
-const router = Router();
-const { exec } = controller;
-/*============================ Rest ============================*/
+import { validate } from '../../shared';
+import AuthController from './controller';
+import validationSchemas from './validations';
 
-router.get('/:collection/:term?/:firstNested?', validate.exec, exec); /** Advanced And Flexible Search Route **/
+const router = Router();
+const { flexibleSearchSchema } = validationSchemas;
+
+const controller = new AuthController();
+
+
+router.get('/:collection/:term?/:firstNestedTerm?', validate(flexibleSearchSchema), controller.run);
 
 export default router;

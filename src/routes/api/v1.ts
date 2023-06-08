@@ -1,8 +1,9 @@
-import { v1 } from '../../modules';
 import { Router } from 'express';
+import { v1 } from '../../modules';
 import { middlewares } from '../../shared';
 
 const router = Router();
+const { Auth } = middlewares;
 const {
   auth: { router: auth },
   users: { router: users },
@@ -10,12 +11,11 @@ const {
   search: { router: search },
   noteTypes: { router: noteTypes }
 } = v1;
-const { JWTAuthentication } = middlewares;
 
 router.use('/auth', auth)
-      .use('/users', JWTAuthentication, users)
-      .use('/search', JWTAuthentication, search)
-      .use('/notes(?!/types)', JWTAuthentication, notes)
-      .use('/notes/types', JWTAuthentication, noteTypes);
+      .use('/users', Auth.JWT, users)
+      .use('/search', Auth.JWT, search)
+      .use('/notes(?!/types)', Auth.JWT, notes)
+      .use('/notes/types', Auth.JWT, noteTypes);
 
 export default router;

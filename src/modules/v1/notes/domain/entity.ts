@@ -1,26 +1,53 @@
-/*============================ Imports ============================*/
-import INote from './ientity';
-/*============================ Rest ============================*/
+import { INote } from "./interfaces";
 
-export default class Note implements INote {
+export default class Note implements Partial<INote> {
 
-  public _id?: string|number;
-  public user_id?: string|number;
-  public type_id?: string|number;
-  public title?: string;
+  /**
+   * Databaste identifier.
+   */
+  public id: string|number;
+
+  /**
+   * User owner identifier.
+   */
+  public userId: string|number;
+
+  /**
+   * Type of note identifier.
+   */
+  public typeId: string|number;
+
+  /**
+   * Databaste identifier.
+   */
+  public title: string;
+
+  /**
+   * Note's content.
+   */
   public content?: string;
 
   /**
    * Create a new note instance.
-   * @param {{ _id?: string|number; user_id: string|number; type_id: string|number; title: string; content: string }} data
+   * @param {Note} data
    */
-  constructor(data: INote){
+  constructor(data: Note){
 
-    const { _id, user_id, type_id, title, content } = data;
-    this._id = _id;
-    this.user_id = user_id;
-    this.type_id = type_id;
-    this.title = title;
-    this.content = content;
+    this.id = data.id;
+    this.userId = data.userId;
+    this.typeId = data.typeId;
+    this.title = data.title;
+    this.content = data.content;
+  }
+
+  toObject(): Record<string, any> {
+
+    return {
+      id: this.id,
+      userId: this.userId,
+      typeId: this.typeId,
+      title: this.title,
+      content: this.content
+    };
   }
 }

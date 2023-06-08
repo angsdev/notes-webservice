@@ -1,2 +1,2 @@
-export * as errors from './errors';
-export * from './Authentication';
+export * as fallback from './Fallback';
+export { default as Auth } from './Auth';

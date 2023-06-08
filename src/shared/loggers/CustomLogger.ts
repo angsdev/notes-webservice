@@ -1,5 +1,5 @@
 import * as rfs from 'rotating-file-stream';
-import { FormattedLog, ConsoleMessageFormat } from '../types';
+import { FormattedLog, ConsoleMessageFormat } from '../';
 
 export default class CustomLogger {
 

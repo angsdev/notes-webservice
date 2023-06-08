@@ -1,39 +1,91 @@
-/*============================ Imports ============================*/
-import { classes } from '../../shared';
-/*============================ Vars setup ============================*/
-const { ValidatorBase } = classes;
-/*============================ Rest ============================*/
+import { checkSchema } from "express-validator";
+import { IsIntOptions } from "express-validator/src/options";
 
-export default new class NoteTypeValidator extends ValidatorBase {
 
-  public showAll: any[];
-  public show: any[];
-  public store: any[];
-  public update: any[];
-  public destroy: any[];
-
-  /**
-   * Create a new note type validator instance.
-   */
-  constructor(){
-
-    super();
-    const { query, params, body } = this.mergeBaseWith({
-      body: {
-        store: [
-          this.validator.body('name', 'Must be a valid string and can\'t contain special characters.').isString().escape(),
-          this.validator.body('description', 'Must be a valid string.').isString().optional().escape()
-        ],
-        update: [
-          this.validator.body('name', 'Must be a valid string and can\'t contain special characters.').isString().optional().escape(),
-          this.validator.body('description', 'Must be a valid string.').isString().optional().escape()
-        ]
-      }
-    });
-    this.assign('showAll', query);
-    this.assign('show', params.id);
-    this.assign('store', body.store);
-    this.assign('update', params.id, body.update);
-    this.assign('destroy', params.id);
-  }
-}
+export default {
+  showAllSchema: checkSchema({
+    page: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isInt: <IsIntOptions & any>{ min: 1, max: 99 },
+      toInt: true,
+      errorMessage: 'Must be a number between 1 and 99.'
+    },
+    per_page: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isInt: <IsIntOptions & any>{ min: 1, max: 99 },
+      toInt: true,
+      errorMessage: 'Must be a number between 1 and 99.'
+    },
+    order: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid value.'
+    },
+    sort_by: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid value.'
+    }
+  }),
+  showSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    }
+  }),
+  storeSchema: checkSchema({
+    name: {
+      in: 'body',
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string and can\'t contain special characters.'
+    },
+    description: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string.'
+    }
+  }),
+  updateSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    name: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string and can\'t contain special characters.'
+    },
+    description: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string.'
+    }
+  }),
+  destroySchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    }
+  })
+};

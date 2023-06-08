@@ -1,27 +1,32 @@
-/*============================ Imports ============================*/
+import { errors, CollectionRequestParams, FormattedCollectionResult } from '../../shared';
+import { INote, NoteRepository } from '../domain/interfaces';
 import * as DTO from './dto';
-import Note from '../domain/entity';
-import INote from '../domain/ientity';
-import { classes, types as T } from '../../shared';
-import * as persistence from '../infrastructure/persistence';
-/*============================ Vars setup ============================*/
-const { NotFoundError } = classes;
-const { mongodb: { repository } } = persistence;
-/*============================ Rest ============================*/
 
-export default new class NoteService {
+const { NotFoundError } = errors;
+
+// import Note from '../domain/entity';
+
+export default class NoteService {
+
+ constructor(
+    private repository: NoteRepository<INote>
+  ){
+
+    this.repository = repository;
+  }
 
   /**
    * Get all resources.
-   * @param {object} options
-   * @returns {Promise<{ total: number; pages: number; page: number; data: object[]; }>}
+   * @param {CollectionRequestParams} options
+   * @returns {Promise<FormattedCollectionResult>}
    */
-  async getAll(options: T.ResourcesCollectionOptions = {}){
+  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult> {
 
-    let { page = 1, per_page = 15, where = {}, filter = {}, sort_by = null, order = 'desc' } = options;
-    const { total, data } = await repository.getAll({ page, per_page, where, sort_by, order, filter });
-    const pages = Math.ceil(total/per_page) || 0;
-    const parsedResults = { total, pages, page, data: DTO.multiple(data) };
+    let { page, perPage, order, sortBy, where } = options;
+
+    const { total, collection } = await this.repository.findAll({ page, perPage, where, sortBy, order });
+    const pages = Math.ceil(total/perPage) || 0;
+    const parsedResults: FormattedCollectionResult = { total, pages, page, collection: DTO.multiple(collection) };
     return parsedResults;
   }
 
@@ -29,52 +34,56 @@ export default new class NoteService {
    * Get one resource by id.
    * @param {string} id
    * @param {string|string[]} populate
-   * @returns {Promise<object>}
+   * @returns {Promise<INote>}
    */
-  async getById(id: string, populate?: string|string[]){
+  async getById(id: string, populate?: string|string[]): Promise<INote> {
 
     const where = { _id: id };
-    const data = await repository.getBy(where, { populate });
-    if(!data) throw new NotFoundError('Resource not found.');
-    return DTO.single(data);
+    const note = await this.repository.findBy(where, { populate });
+
+    if(!note) throw new NotFoundError();
+    return DTO.single(note);
   }
 
   /**
    * Create a resource.
-   * @param {object} data
-   * @returns {Promise<object>}
+   * @param {INote} data
+   * @returns {Promise<INote>}
    */
-  async create(data: INote){
+  async create(data: INote): Promise<INote> {
 
-    let note = new Note(data);
-    note = await repository.create(note);
-    return DTO.single(note);
+    // const note = new Note(data);
+    const noteCreated = <INote><unknown>(await this.repository.create(data));
+
+    return DTO.single(noteCreated);
   }
 
   /**
    * Update a resource.
    * @param {string} id
-   * @param {object} toUpdate
-   * @returns {Promise<object>}
+   * @param {INote} toUpdate
+   * @returns {Promise<INote>}
    */
-  async update(id: string, toUpdate: INote){
+  async update(id: string, toUpdate: INote): Promise<INote> {
 
     const where = { _id: id };
-    const data = await repository.update(where, toUpdate);
-    if(!data) throw new NotFoundError('Resource not found.');
-    return DTO.single(data);
+    const note = <INote><unknown>(await this.repository.update(where, toUpdate));
+
+    if(!note) throw new NotFoundError();
+    return DTO.single(note);
   }
 
   /**
    * Delete a resource.
    * @param {string} id
-   * @returns {Promise<object>}
+   * @returns {Promise<INote>}
    */
-  async delete(id: string){
+  async delete(id: string): Promise<INote> {
 
     const where = { _id: id };
-    const data = await repository.delete(where);
-    if(!data) throw new NotFoundError('Resource not found.');
-    return DTO.single(data);
+    const note = <INote><unknown>(await this.repository.delete(where));
+
+    if(!note) throw new NotFoundError();
+    return DTO.single(note);
   }
 }

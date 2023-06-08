@@ -1,16 +1,14 @@
-/*============================ Imports ============================*/
+import { INoteType } from '../domain/interfaces';
 import { utils } from '../../shared';
-import INoteType from '../domain/ientity';
-/*============================ Vars setup ============================*/
+
 const { filterObject } = utils;
-/*============================ Rest ============================*/
 
 /**
  * Wrap a resource filtering data to transfer.
- * @param {object} resource
- * @returns {object}
+ * @param {INoteType} resource
+ * @returns {INoteType}
  */
-export const single = (resource: INoteType): object => filterObject({
+export const single = (resource: INoteType): INoteType => filterObject({
   id: resource._id,
   name: resource.name,
   description: resource.description
@@ -19,7 +17,7 @@ export const single = (resource: INoteType): object => filterObject({
 
 /**
  * Wrap a multiples resources filtering data to transfer.
- * @param {object[]} resources
- * @returns {object[]}
+ * @param {INoteType[]} resources
+ * @returns {INoteType[]}
  */
-export const multiple = (resources: INoteType[]): object[] => resources.map(single);
+export const multiple = (resources: INoteType[]): INoteType[] => resources.map(single);

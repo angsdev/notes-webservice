@@ -1,77 +1,284 @@
-/*============================ Imports ============================*/
 import config from 'config';
-import { classes } from '../../shared';
-/*============================ Vars setup ============================*/
-const { ValidatorBase } = classes;
-const { password } = config.get('app.standards');
-/*============================ Rest ============================*/
+import { checkSchema } from "express-validator";
+import { IsIntOptions, IsStrongPasswordOptions } from 'express-validator/src/options';
+import { ValidationStandard } from '../../shared';
 
-export default new class UserValidator extends ValidatorBase {
+const { password }: ValidationStandard = config.get('app.standards');
 
-  public showAll: any[];
-  public show: any[];
-  public store: any[];
-  public update: any[];
-  public destroy: any[];
-  public showAllNotes: any[];
-  public showNote: any[];
-  public storeNote: any[];
-  public updateNote: any[];
-  public destroyNote: any[];
-
-  /**
-   * Create a new user validator instance.
-   */
-  constructor(){
-
-    super();
-    const { query, params, body } = this.mergeBaseWith({
-      params: {
-        id: this.validator.param('id', 'It\'s necessary and must be a valid string.').isString().escape(),
-        noteId: this.validator.param('nid', 'It\'s necessary and must be a valid string.').isMongoId()
-      },
-      body: {
-        user: {
-          store: [
-            this.validator.body(['firstname', 'lastname'], 'Must be a string containing only alphabetic and space characters.').isString().escape(),
-            this.validator.body('username', 'Must be a valid username.').isString().escape(),
-            this.validator.body('phone', 'Must be a valid phone format.').isString().optional().escape(),
-            this.validator.body('email', 'Must be a valid email.').isEmail().escape(),
-            this.validator.body('password', 'Must be greater than 8 and contain at least one uppercase letter, one lowercase letter, one symbol, and one number.')
-              .custom((val, { req }) => (val === req.body.password_confirmation)).withMessage('The passwords don\'t match.').isStrongPassword({ ...password })
-          ],
-          update: [
-            this.validator.body(['firstname', 'lastname'], 'Must be a string containing only alphabetic and space characters.').isString().optional().escape(),
-            this.validator.body('username', 'Must be a valid username.').isString().optional().escape(),
-            this.validator.body('phone', 'Must be a valid phone format.').isString().optional().escape(),
-            this.validator.body('email', 'Must be a valid email.').isEmail().optional().escape(),
-            this.validator.body('password', 'Must be greater than 8 and contain at least one uppercase letter, one lowercase letter, one symbol, and one number.')
-              .custom((val, { req }) => (val === req.body.password_confirmation)).withMessage('The passwords don\'t match.').isStrongPassword({ ...password }).optional().escape()
-          ]
-        },
-        note: {
-          store: [
-            this.validator.body('type', 'Must be a string and a valid type.').isMongoId(),
-            this.validator.body('title', 'Must be a valid string.').isString().escape(),
-            this.validator.body('content', 'Must be a valid string.').isString().optional().escape()
-          ],
-          update: [
-            this.validator.body('type', 'Must be a string and a valid type.').isMongoId().optional(),
-            this.validator.body('title', 'Must be a valid string.').isString().optional().escape(),
-            this.validator.body('content', 'Must be a valid string.').isString().optional().escape()
-          ]
-        }
+export default {
+  showAllSchema: checkSchema({
+    page: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isInt: <IsIntOptions & any>{ min: 1, max: 99 },
+      toInt: true,
+      errorMessage: 'Must be a number between 1 and 99.'
+    },
+    per_page: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isInt: <IsIntOptions & any>{ min: 1, max: 99 },
+      toInt: true,
+      errorMessage: 'Must be a number between 1 and 99.'
+    },
+    order: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid value.'
+    },
+    sort_by: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid value.'
+    }
+  }),
+  showSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    }
+  }),
+  storeSchema: checkSchema({
+    firstname: {
+      in: 'body',
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a string containing only alphabetic and space characters.'
+    },
+    lastname: {
+      in: 'body',
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a string containing only alphabetic and space characters.'
+    },
+    username: {
+      in: 'body',
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid username.'
+    },
+    phone: {
+      in: 'body',
+      escape: true,
+      isString: true,
+      optional: true,
+      errorMessage: 'Must be a valid phone format.'
+    },
+    email: {
+      in: 'body',
+      escape: true,
+      isEmail: true,
+      isString: true,
+      errorMessage: 'Must be a valid email.'
+    },
+    password: {
+      in: 'body',
+      escape: true,
+      isStrongPassword: <IsStrongPasswordOptions & any>{ ...password },
+      errorMessage: 'Must be greater than 8 and contain at least one uppercase letter, one lowercase letter, one symbol, and one number.',
+      custom: {
+        options: (val, { req }) => (val === req.body.password_confirmation),
+        errorMessage: 'The passwords don\'t match.'
       }
-    });
-    this.assign('showAll', query);
-    this.assign('show', params.id);
-    this.assign('store', body.user.store);
-    this.assign('update', params.id, body.user.update);
-    this.assign('destroy', params.id);
-    this.assign('showAllNotes', params.id, query);
-    this.assign('showNote', params.id, params.noteId);
-    this.assign('storeNote', params.id, body.note.store);
-    this.assign('updateNote', params.id, params.noteId, body.note.update);
-    this.assign('destroyNote', params.id, params.noteId);
-  }
+    }
+  }),
+  updateSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    firstname: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a string containing only alphabetic and space characters.'
+    },
+    lastname: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a string containing only alphabetic and space characters.'
+    },
+    username: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid username.'
+    },
+    phone: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid phone format.'
+    },
+    email: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isEmail: true,
+      isString: true,
+      errorMessage: 'Must be a valid email.'
+    },
+    password: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isStrongPassword: <IsStrongPasswordOptions & any>{ ...password },
+      errorMessage: 'Must be greater than 8 and contain at least one uppercase letter, one lowercase letter, one symbol, and one number.',
+      custom: {
+        options: (val, { req }) => (val === req.body.password_confirmation),
+        errorMessage: 'The passwords don\'t match.'
+      }
+    }
+  }),
+  destroySchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    }
+  }),
+  showAllNotesSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    page: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isInt: <IsIntOptions & any>{ min: 1, max: 99 },
+      toInt: true,
+      errorMessage: 'Must be a number between 1 and 99.'
+    },
+    per_page: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isInt: <IsIntOptions & any>{ min: 1, max: 99 },
+      toInt: true,
+      errorMessage: 'Must be a number between 1 and 99.'
+    },
+    order: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid value.'
+    },
+    sort_by: {
+      in: 'query',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid value.'
+    }
+  }),
+  showNoteSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    nid: {
+      in: 'params',
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    }
+  }),
+  storeNoteSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    type_id: {
+      in: 'body',
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'Must be a string and a valid type.'
+    },
+    title: {
+      in: 'body',
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string.'
+    },
+    content: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string.'
+    }
+  }),
+  updateNoteSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    nid: {
+      in: 'params',
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    type_id: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'Must be a string and a valid type.'
+    },
+    title: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string.'
+    },
+    content: {
+      in: 'body',
+      optional: true,
+      escape: true,
+      isString: true,
+      errorMessage: 'Must be a valid string.'
+    }
+  }),
+  destroyNoteSchema: checkSchema({
+    id: {
+      in: 'params',
+      escape: true,
+      isString: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    },
+    nid: {
+      in: 'params',
+      escape: true,
+      isMongoId: true,
+      errorMessage: 'It\'s necessary and must be a valid string.'
+    }
+  })
 }

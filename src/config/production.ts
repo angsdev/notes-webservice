@@ -1,4 +1,4 @@
-import { types } from '../shared';
+import { EnvironmentConfig } from '../shared';
 
 export = {
   app: {
@@ -53,4 +53,4 @@ export = {
       format: 'Status: :status - Method: :method - Endpoint: :url - :res[content-length] - :response-time ms'
     }
   }
-} as types.EnvirontmentConfig;
+} as EnvironmentConfig;

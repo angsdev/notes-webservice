@@ -1,16 +1,14 @@
-/*============================ Imports ============================*/
+import { IUser } from '../domain/interfaces';
 import { utils } from '../../shared';
-import IUser from '../domain/ientity';
-/*============================ Vars setup ============================*/
+
 const { filterObject } = utils;
-/*============================ Rest ============================*/
 
 /**
  * Wrap a resource filtering data to transfer.
- * @param {object} resource
- * @returns {object}
+ * @param {IUser} resource
+ * @returns {Document}
  */
-export const single = (resource: IUser): object => filterObject({
+export const single = (resource: IUser): IUser => filterObject({
     uid: resource._id,
     firstname: resource.firstname,
     lastname: resource.lastname,
@@ -18,13 +16,13 @@ export const single = (resource: IUser): object => filterObject({
     phone: resource.phone,
     email: resource.email,
     notes: resource.notes,
-    access_token: resource.access_token
+    accessToken: resource.accessToken
   }, (key: string) => key !== undefined
 );
 
 /**
  * Wrap a multiples resources filtering data to transfer.
- * @param {object[]} resources
- * @returns {object[]}
+ * @param {IUser[]} resources
+ * @returns {IUser[]}
  */
-export const multiple = (resources: IUser[]): object[] => resources.map(single);
+export const multiple = (resources: IUser[]): IUser[] => resources.map(single);

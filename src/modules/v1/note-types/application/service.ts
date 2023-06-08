@@ -1,27 +1,32 @@
-/*============================ Imports ============================*/
+import { errors, CollectionRequestParams, FormattedCollectionResult } from '../../shared';
+import { INoteType, NoteTypeRepository } from '../domain/interfaces';
 import * as DTO from './dto';
-import NoteType from '../domain/entity';
-import INoteType from '../domain/ientity';
-import { classes, types as T } from '../../shared';
-import * as persistence from '../infrastructure/persistence';
-/*============================ Vars setup ============================*/
-const { NotFoundError } = classes;
-const { mongodb: { repository } } = persistence;
-/*============================ Rest ============================*/
 
-export default new class NoteTypeService {
+const { NotFoundError } = errors;
+
+// import NoteType from '../domain/entity';
+
+export default class NoteTypeService {
+
+ constructor(
+    private repository: NoteTypeRepository<INoteType>
+  ){
+
+    this.repository = repository;
+  }
 
   /**
    * Get all resources.
-   * @param {object} options
-   * @returns {Promise<{ total: number; pages: number; page: number; data: object[]; }>}
+   * @param {CollectionRequestParams} options
+   * @returns {Promise<FormattedCollectionResult>}
    */
-  async getAll(options: T.ResourcesCollectionOptions = {}){
+  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult> {
 
-    let { page = 1, per_page = 15, where = {}, filter = {}, sort_by = null, order = 'desc' } = options;
-    const { total, data } = await repository.getAll({ page, per_page, where, sort_by, order, filter });
-    const pages = Math.ceil(total/per_page) || 0;
-    const parsedResults = { total, pages, page, data: DTO.multiple(data) };
+    let { page, perPage, order, sortBy, where } = options;
+
+    const { total, collection } = await this.repository.findAll({ page, perPage, where, sortBy, order });
+    const pages = Math.ceil(total/perPage) || 0;
+    const parsedResults: FormattedCollectionResult = { total, pages, page, collection: DTO.multiple(collection) };
     return parsedResults;
   }
 
@@ -29,52 +34,56 @@ export default new class NoteTypeService {
    * Get one resource by id.
    * @param {string} id
    * @param {string|string[]} populate
-   * @returns {Promise<object>}
+   * @returns {Promise<INoteType>}
    */
-  async getById(id: string, populate?: string|string[]){
+  async getById(id: string, populate?: string|string[]): Promise<INoteType> {
 
     const where = { _id: id };
-    const data = await repository.getBy(where, { populate });
-    if(!data) throw new NotFoundError('Resource not found.');
-    return DTO.single(data);
+    const noteType = await this.repository.findBy(where, { populate });
+
+    if(!noteType) throw new NotFoundError();
+    return DTO.single(noteType);
   }
 
   /**
    * Create a resource.
-   * @param {object} data
-   * @returns {Promise<object>}
+   * @param {INoteType} data
+   * @returns {Promise<INoteType>}
    */
-  async create(data: INoteType){
+  async create(data: INoteType): Promise<INoteType> {
 
-    let note = new NoteType(data);
-    note = await repository.create(note);
-    return DTO.single(note);
+    // let note = new NoteType(data);
+    const noteTypeCreated = <INoteType><unknown>(await this.repository.create(data));
+
+    return DTO.single(noteTypeCreated);
   }
 
   /**
    * Update a resource.
    * @param {string} id
-   * @param {object} toUpdate
-   * @returns {Promise<object>}
+   * @param {INoteType} toUpdate
+   * @returns {Promise<INoteType>}
    */
-  async update(id: string, toUpdate: INoteType){
+  async update(id: string, toUpdate: INoteType): Promise<INoteType> {
 
     const where = { _id: id };
-    const data = await repository.update(where, toUpdate);
-    if(!data) throw new NotFoundError('Resource not found.');
-    return DTO.single(data);
+    const noteType = <INoteType><unknown>(await this.repository.update(where, toUpdate));
+
+    if(!noteType) throw new NotFoundError();
+    return DTO.single(noteType);
   }
 
   /**
    * Delete a resource.
    * @param {string} id
-   * @returns {Promise<object>}
+   * @returns {Promise<INoteType>}
    */
-  async delete(id: string){
+  async delete(id: string): Promise<INoteType> {
 
     const where = { _id: id };
-    const data = await repository.delete(where);
-    if(!data) throw new NotFoundError('Resource not found.');
-    return DTO.single(data);
+    const noteType = <INoteType><unknown>(await this.repository.delete(where));
+
+    if(!noteType) throw new NotFoundError();
+    return DTO.single(noteType);
   }
 }

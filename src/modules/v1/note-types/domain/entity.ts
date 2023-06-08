@@ -1,22 +1,39 @@
-/*============================ Imports ============================*/
-import INoteType from './ientity';
-/*============================ Rest ============================*/
+import { INoteType } from './interfaces';
 
 export default class NoteType implements INoteType {
 
-  public _id?: string|number;
-  public name?: string;
+  /**
+   * Databaste identifier.
+   **/
+  public id?: string|number;
+
+  /**
+   *  Name of the title of note.
+   **/
+  public name: string;
+
+  /**
+   *  The description about this type of note.
+   **/
   public description?: string;
 
   /**
    * Create a new note type instance.
-   * @param {{ _id?: string|number; name: string; description: string; }} data
+   * @param {NoteType} data
    */
-  constructor(data: INoteType) {
+  constructor(data: NoteType) {
 
-    const { _id, name, description } = data;
-    this._id = _id;
-    this.name = name;
-    this.description = description;
+    this.id = data.id;
+    this.name = data.name;
+    this.description = data.description;
+  }
+
+  toObject(): Record<string, any> {
+
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description
+    };
   }
 }

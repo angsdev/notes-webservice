@@ -1,17 +1,15 @@
-/*============================ Imports ============================*/
 import cors from 'cors';
 import config from 'config';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import express from 'express';
-import routes from './routes';
 import compression from 'compression';
-import { middlewares } from './shared';
 import cookieParser from 'cookie-parser';
+import routes from './routes';
+import { middlewares } from './shared';
 import initSubscribers from './subscribers';
-/*============================ Vars setup ============================*/
-const { notFoundThrower, fallback } = middlewares.errors;
-/*=========================== Rest =============================*/
+
+const { notFoundFallback, errorHandlerFallback } = middlewares.fallback;
 
 const app = express();
 app.use(compression())
@@ -22,8 +20,8 @@ app.use(compression())
    .use(helmet())
    .use(morgan(config.get('logger.morgan.format')))
    .use('/', routes)
-   .use(notFoundThrower)
-   .use(fallback);
+   .use(notFoundFallback)
+   .use(errorHandlerFallback);
 
 initSubscribers();
 

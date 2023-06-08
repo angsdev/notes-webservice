@@ -1,5 +1,3 @@
-/*============================ Imports ============================*/
-import events from 'events';
-/*============================ Vars setup ============================*/
-export const globalEvents = new events.EventEmitter();
-/*============================ Rest ============================*/
+import { EventEmitter } from 'events';
+
+export const globalEventEmitter = new EventEmitter();

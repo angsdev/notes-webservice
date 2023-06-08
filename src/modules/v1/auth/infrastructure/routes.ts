@@ -1,25 +1,36 @@
-/*============================ Imports ============================*/
 import { Router } from 'express';
-import validate from './validations';
-import controller from './controller';
-import { middlewares } from '../../shared';
-/*============================ Vars setup ============================*/
-const router = Router();
-const { JWTAuthentication } = middlewares;
-const {
-  signUp, signIn, googleSign, profileInfo, profileNotesInfo,
-  forgotPassword, resetPassword, emailVerify, emailVerifyNotification
-} = controller;
-/*============================ Rest ============================*/
+import { middlewares, validate } from '../../shared';
+import validationSchemas from './validations';
+import Controller from './controller';
+import { mongo } from '../../users/infrastructure/persistence';
+import { Service } from '../../users'
 
-router.get('/profile', JWTAuthentication, profileInfo)                                  /** Profile Route **/
-      .get('/profile/notes', JWTAuthentication, profileNotesInfo)                       /** Profile Route **/
-      .post('/signup', validate.signUp, signUp)                                          /** SignUp Route **/
-      .post('/signin', validate.signIn, signIn)                                          /** SignIn Route **/
-      .post('/google', validate.googleSign, googleSign)                                  /** Google SignIn/SignUp Route **/
-      .post('/password/forgot', validate.forgotPassword, forgotPassword)                 /** Forgot Password Route **/
-      .post('/password/reset/:token', validate.resetPassword, resetPassword)             /** Reset Password Route **/
-      .get('/email/verify/:token', validate.emailVerify, emailVerify)                    /** Verify Email Route **/
-      .post('/email/verify-notification', JWTAuthentication, emailVerifyNotification);  /** Email Notification Route **/
+
+const router = Router();
+const { Auth } = middlewares;
+const {
+  signUpSchema,
+  signInSchema,
+  googleSignSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  emailVerificationSchema,
+  emailNotificationSchema
+} = validationSchemas;
+
+
+const repository = new mongo.Repository();
+const service = new Service(repository);
+const controller = new Controller(service);
+
+router.get('/profile', Auth.JWT, controller.profileInfo)
+      .get('/profile/notes', Auth.JWT, controller.profileNotesInfo)
+      .post('/signup', validate(signUpSchema), controller.signUp)
+      .post('/signin', validate(signInSchema), controller.signIn)
+      .post('/google', validate(googleSignSchema), controller.googleSign)
+      .post('/password/forgot', validate(forgotPasswordSchema), controller.forgotPassword)
+      .post('/password/reset/:token', validate(resetPasswordSchema), controller.resetPassword)
+      .get('/email/verify/:token', validate(emailVerificationSchema), controller.emailVerify)
+      .post('/email/verify-notification', [ Auth.JWT, validate(emailNotificationSchema) ], controller.emailVerifyNotification);
 
 export default router;

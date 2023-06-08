@@ -1,4 +1,4 @@
-import { BaseErrorOptions } from '../types';
+import { BaseErrorOptions } from '../';
 
 export default class BaseError extends Error {
 

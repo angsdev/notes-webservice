@@ -1,16 +1,16 @@
-import { BaseError, NotFoundError, ErrorHandler } from '../errors';
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import { BaseError, NotFoundError, ErrorHandler } from '../errors';
 
 const errorHandler = new ErrorHandler();
 
 /**
- * Middleware that throw an not found error.
+ * Middleware that throw a not found error.
  * @param {Request} req
  * @param {Response} res
  * @param {NextFunction} next
  * @returns {Promise<void>}
  */
-export const notFoundThrower = async (req: Request, res: Response, next: NextFunction): Promise<void> => next(new NotFoundError('Resource not found.'));
+export const notFoundFallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => next(new NotFoundError());
 
 /**
  * Middleware that handle error if any other can.
@@ -20,9 +20,9 @@ export const notFoundThrower = async (req: Request, res: Response, next: NextFun
  * @param {NextFunction} next
  * @returns {Promise<void>}
  */
-export const fallback: ErrorRequestHandler = async (err: unknown, req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const errorHandlerFallback: ErrorRequestHandler = async (err: unknown, req: Request, res: Response, next: NextFunction): Promise<void> => {
 
-  const error = err as Error & BaseError;
+  const error = err as BaseError;
   const message = errorHandler.familiarizeMessage(error);
   res.status(error.status || 500).json({ success: false, message });
   if(errorHandler.isTrustedError(error)) return next(error);

@@ -1,13 +1,15 @@
-/*============================ Imports ============================*/
-import IUser from './ientity';
-/*============================ Rest ============================*/
+import * as bcrypt from 'bcryptjs';
+import { utils } from '../../shared';
+import { IUser } from './interfaces';
 
-export default class User implements IUser {
+const { Jwt } = utils;
+
+export default class User implements Partial<IUser> {
 
   /**
    * Databaste identifier.
    */
-  public _id?: string|number;
+  public id?: string|number;
 
   /**
    * Firstname.
@@ -27,7 +29,7 @@ export default class User implements IUser {
   /**
    * Phone.
    */
-  public phone: string;
+  public phone?: string;
 
   /**
    * Email.
@@ -35,9 +37,24 @@ export default class User implements IUser {
   public email: string;
 
   /**
+   * Flag to know if an email is verified.
+   */
+  public emailVerifiedAt?: Date|null;
+
+  /**
    * Password.
    */
-  public password: string;
+  public password?: string;
+
+  /**
+   * Remember token flag.
+   */
+  public rememberToken?: string;
+
+  /**
+   * Access token.
+   */
+  public accessToken?: string;
 
   /**
    * User notes.
@@ -45,24 +62,60 @@ export default class User implements IUser {
   public notes: string[]|object[];
 
   /**
-   * User access token.
+   * Soft delete timestamp.
    */
-  public access_token?: string;
+  public deletedAt?: Date|null;
 
   /**
-   * Create a new user instance.
-   * @param {{ _id?: string|number; firstname: string; lastname: string; username: string; phone?: string; email: string; password?: string; access_token?: string; }} data
+   * Create a new User instance.
+   * @param {IUser} data
    */
-  constructor(data: IUser){
+  constructor(data: User){
 
-    const { _id, firstname, lastname, username, phone, email, password, access_token } = data;
-    this._id = _id;
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.username = username;
-    this.phone = phone;
-    this.email = email;
-    this.password = password;
-    this.access_token = access_token;
+    this.id = data.id;
+    this.firstname = data.firstname;
+    this.lastname = data.lastname;
+    this.username = data.username;
+    this.phone = data.phone;
+    this.email = data.email;
+    this.password = data.password;
+    this.notes = [];
+    this.emailVerifiedAt = data.emailVerifiedAt;
+    this.rememberToken = data.rememberToken;
+    this.deletedAt = data.deletedAt;
+  }
+
+  async hashPassword(saltRounds?: number): Promise<void> {
+
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hash = await bcrypt.hash(this.password, salt);
+    this.password = hash;
+  }
+
+  async isPasswordValid(password: string){
+
+    bcrypt.compare(password, this.password);
+  }
+
+  async generateAccessToken(){
+
+    this.accessToken = await Jwt.generate({ id: this.id });
+  }
+
+  toObject(): Record<string, any> {
+
+    return {
+      uid: this.id,
+      firstname: this.firstname,
+      lastname: this.lastname,
+      username: this.username,
+      phone: this.phone,
+      email: this.email,
+      password: this.password,
+      notes: this.notes,
+      emailVerifiedAt: this.emailVerifiedAt,
+      rememberToken: this.rememberToken,
+      deletedAt: this.deletedAt
+    };
   }
 }

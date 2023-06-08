@@ -1,17 +1,24 @@
-/*============================ Imports ============================*/
 import { Router } from 'express';
-import validate from './validations';
-import controller from './controller';
-/*============================ Vars setup ============================*/
-const router = Router();
-const { showAll, show, store, update, destroy } = controller;
-/*============================ Rest ============================*/
+import { validate } from '../../shared';
+import validationSchemas from './validations';
+import Controller from './controller';
+import { mongo } from './persistence';
+import { Service } from '../'
 
-router.get('/', validate.showAll, showAll)         /** All Note Type Route **/
-      .get('/:id', validate.show, show)            /** Specific Note Type Route **/
-      .post('/', validate.store, store)            /** Store New Note Type Route **/
-      .put('/:id', validate.update, update)        /** Update Note Type Route **/
-      .patch('/:id', validate.update, update)      /** Update Note Type Route **/
-      .delete('/:id', validate.destroy, destroy);  /** Delete Note Type Route **/
+
+const router = Router();
+const { showAllSchema, showSchema, storeSchema, updateSchema, destroySchema } = validationSchemas;
+
+const repository = new mongo.Repository();
+const service = new Service(repository);
+const controller = new Controller(service);
+
+
+router.get('/', validate(showAllSchema), controller.showAll)
+      .get('/:id', validate(showSchema), controller.show)
+      .post('/', validate(storeSchema), controller.store)
+      .put('/:id', validate(updateSchema), controller.update)
+      .patch('/:id', validate(updateSchema), controller.update)
+      .delete('/:id', validate(destroySchema), controller.destroy);
 
 export default router;

@@ -1,22 +1,20 @@
-/*============================ Imports ============================*/
 import config from 'config';
-import { types as T, services } from '../shared';
-/*============================ Vars setup ============================*/
-const { address } = config.get('mail.from');
-const { mailer, templates: { verifyEmailTemplate: template } } = services.mail;
-/*=========================== Rest =============================*/
+import { SenderMailInformation, MailHandler, services } from '../shared';
+
+const { address }: SenderMailInformation = config.get('mail.from');
+const { mailer, templates: { verifyEmailTemplate } } = services.mail;
 
 /**
  * Send a verify email.
- * @param {object} options
- * @returns {Promise<object>}
+ * @param {MailHandler} options
+ * @returns {Promise<SMTPTransport.SentMessageInfo>}
  */
-export default async (options: T.MailTemplate & T.MailHandler) => {
+export default async (options: MailHandler) => {
 
-  const { version = 'v1', token, from = address, to } = options;
+  const { version = 'v1', token, to } = options;
   const mail = await mailer.sendMail({
-    from, to, subject: 'Email verification.',
-    html: template({ version, token })
+    from: address, to, subject: 'Email verification.',
+    html: verifyEmailTemplate({ version, token })
   });
   return mail;
 };

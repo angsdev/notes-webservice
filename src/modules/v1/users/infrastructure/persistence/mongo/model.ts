@@ -1,24 +1,22 @@
-/*============================ Imports ============================*/
 import { services } from '../../../../shared';
-/*============================ Vars setup ============================*/
-const { Schema, model } = services.database.mongodb.mongoose;
-/*============================ Rest ============================*/
+import { UserDocument } from '../../../domain/interfaces';
 
-const UserSchema = new Schema({
+const { Schema, model } = services.database.mongodb.mongoose;
+
+const UserSchema = new Schema<UserDocument>({
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   username: { type: String, index: true, unique: true, required: true },
   phone: { type: String, index: true, unique: true, sparse: true },
   email: { type: String, index: true, unique: true, required: true },
-  email_verified_at: { type: Date, select: false, default: null },
+  emailVerifiedAt: { type: Date, default: null },
   password: { type: String, required: true },
-  remember_token: { type: String, default: null },
+  rememberToken: { type: String, default: null },
   notes: [{ type: Schema.Types.ObjectId, ref: 'Note', index: true }],
-  deleted_at: { type: Date, default: null }
+  deletedAt: { type: Date, default: null }
 }, {
   collection: 'Users',
-  versionKey: false,
-  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+  timestamps: true
 });
 
-export default model('User', UserSchema);
+export default model<UserDocument>('User', UserSchema);

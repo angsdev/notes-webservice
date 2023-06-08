@@ -1,53 +1,60 @@
-/*============================ Imports ============================*/
-import { classes, types as T } from '../../shared';
-import { service as userService } from '../../users';
-import { service as noteService } from '../../notes';
 import { NextFunction, Request, Response } from 'express';
-import * as expressTypes from 'express-serve-static-core';
-import { service as noteTypeService } from '../../note-types';
-/*============================ Vars setup ============================*/
-const { NotFoundError } = classes;
-/*============================ Rest ============================*/
+import { ParamsDictionary } from 'express-serve-static-core';
+import { CollectionRequestParams, ObjectOfStringValues } from '../../shared/';
+// import UserService from '../../users/application/service';
+import NotFoundError from '../../../../shared/errors/NotFoundError';
 
-const collections: { [x: string]: any } = {
-  'users': userService,
-  'notes': noteService,
-  'notestypes': noteTypeService
+const collections: ObjectOfStringValues = {
+  users: 'users',
+  notes: 'notes',
+  noteTypes: 'note-types'
 };
 
 /**
  * Parse params to get correct collection and single indicator if exists.
- * @param {object} params
- * @returns {Promise<object>}
+ * @param {ParamsDictionary} params
+ * @returns {Promise<ObjectOfStringValues>}
  */
-const parseParams = async (params: expressTypes.ParamsDictionary) => {
+const parseParams = async (params: ParamsDictionary): Promise<ObjectOfStringValues> => {
 
-  let { collection, term, firstNested } = params;
+  let { collection, term, firsNestedTerm } = params;
   if(term === 'types'){
-    collection = `${collection}${term}`;
-    term = firstNested;
+
+    collection = `${collection}${term.replace(/^./, (c) => c.toUpperCase() )}`
+    term = firsNestedTerm;
   }
   return { collection, term };
 };
 
-export default new class SearchController {
+export default class AuthController {
 
   /**
    * Handle searching through different resource collections.
-   * @param {object} req
-   * @param {object} res
-   * @param {function} next
-   * @returns {Promise<object>}
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response>}
    */
-  async exec(req: Request, res: Response, next: NextFunction){
+  async run(req: Request, res: Response, next: NextFunction): Promise<Response> {
 
     try{
 
-      const { page = 1, per_page = 15, sort_by, order, ...where }: T.ResourcesCollectionOptions = req.query;
-      const { collection, term }: { [x: string]: string|number } = await parseParams(req.params);
-      const method = `get${(term) ? 'ById' : 'All'}`;
-      const data = await collections[collection][method](term || { page, per_page, where, sort_by, order });
-      res.json({ success: true, content: data });
-    } catch(err){ next(new NotFoundError()); }
+      const { page, perPage, order, sortBy, ...where } = req.query;
+      const { collection, term } = await parseParams(req.params);
+
+      const moduleChosen = Object.keys(collections).find(val => val.includes(collection))
+      if(!moduleChosen) throw new NotFoundError();
+
+      const repositoryModule = await import(`../../${collections[moduleChosen]}/persistence/mongo`)
+      const repository = new repositoryModule.Repository();
+      const serviceModule = await import(`../../${collections[moduleChosen]}`);
+      const service = new serviceModule.Service(repository)
+
+      const method = `find${(term) ? 'ById' : 'All'}`;
+      const data = await service[method](term || { page, perPage, order, sortBy, where });
+
+      return res.json({ success: true, content: data });
+
+    } catch(err){ next(); }
   }
 }

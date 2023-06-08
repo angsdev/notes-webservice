@@ -1,19 +1,17 @@
-/*============================ Imports ============================*/
+import { INote } from '../domain/interfaces';
 import { utils } from '../../shared';
-import INote from '../domain/ientity';
-/*============================ Vars setup ============================*/
+
 const { filterObject } = utils;
-/*============================ Rest ============================*/
 
 /**
  * Wrap a resource filtering data to transfer.
- * @param {object} resource
- * @returns {object}
+ * @param {INote} resource
+ * @returns {INote}
  */
-export const single = (resource: INote): object => filterObject({
+export const single = (resource: INote): INote => filterObject({
     id: resource._id,
-    user: resource.user_id,
-    type: resource.type_id,
+    user: resource.userId,
+    type: resource.typeId,
     title: resource.title,
     content: resource.content
   }, (key: string) => key !== undefined
@@ -21,7 +19,7 @@ export const single = (resource: INote): object => filterObject({
 
 /**
  * Wrap a multiples resources filtering data to transfer.
- * @param {object[]} resources
- * @returns {object[]}
+ * @param {INote[]} resources
+ * @returns {INote[]}
  */
-export const multiple = (resources: INote[]): object[] => resources.map(single);
+export const multiple = (resources: INote[]): INote[] => resources.map(single);

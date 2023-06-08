@@ -1,4 +1,4 @@
-import { types } from '../shared';
+import { EnvironmentConfig } from '../shared';
 
 export = {
   app: {
@@ -54,4 +54,4 @@ export = {
       // format: 'Client: :remote-addr - User: :remote-user - Date: [:date[clf]] - Method: :method - Endpoint: :url - HTTP/:http-version - Status: :status - Response Time :response-time ms'
     }
   }
-} as types.EnvirontmentConfig;
+} as EnvironmentConfig;
