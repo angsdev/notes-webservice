@@ -1,1 +1,1 @@
-export { default as router } from './infrastructure/routes';
+export { default as router } from './infrastructure/search.routes';

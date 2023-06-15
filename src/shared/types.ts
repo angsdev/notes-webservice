@@ -132,7 +132,7 @@ export interface CollectionRequestParams {
   perPage?: number;
   sortBy?: string;
   order?: 'desc'|'asc';
-  where?: { [param: string]: string|unknown };
+  where?: { [param: string]: any };
 }
 
 export interface CollectionOptions extends CollectionRequestParams, IsFilterable, IsPopulable { }

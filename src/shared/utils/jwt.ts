@@ -24,7 +24,7 @@ export class Jwt {
    * @param {string} token
    * @returns {Promise<string|JwtPayload>}
    */
-  static verify(token: string): Promise<string|JwtPayload> {
+  static verify(token: string): Promise<string | JwtPayload> {
 
     const secretKey = process.env.SECRET_OR_PRIVATE_KEY;
     return new Promise((resolve, reject) => {
