@@ -19,14 +19,14 @@ export class UserService {
   /**
    * Get all resources.
    * @param {CollectionRequestParams} options
-   * @returns {Promise<FormattedCollectionResult>}
+   * @returns {Promise<FormattedCollectionResult<User>>}
    */
-  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult> {
+  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult<User>> {
 
     const { page, perPage, order, sortBy, where } = options;
 
     const { total, collection } = await this.repository.findAll({ page, perPage, where, sortBy, order });
-    const parsedResults: FormattedCollectionResult = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
+    const parsedResults: FormattedCollectionResult<User> = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
 
     return parsedResults;
   }
@@ -104,15 +104,15 @@ export class UserService {
   /**
    * Get all sub-resources.
    * @param {string} index
-   * @param {object} options
-   * @returns {Promise<CollectionRequestParams>}
+   * @param {CollectionRequestParams} options
+   * @returns {Promise<FormattedCollectionResult<Note>>}
    */
-  async getAllNotes(index: string, options: CollectionRequestParams = {}): Promise<FormattedCollectionResult> {
+  async getAllNotes(index: string, options: CollectionRequestParams = {}): Promise<FormattedCollectionResult<Note>> {
 
     const { page, perPage, order, sortBy, where } = options;
 
     const { total, collection } = await this.repository.findAllNotes(index, { page, perPage, where: where, sortBy, order });
-    const parsedResults: FormattedCollectionResult = { total, page, pages: (Math.ceil(total/perPage) || 0), collection };
+    const parsedResults: FormattedCollectionResult<Note> = { total, page, pages: (Math.ceil(total/perPage) || 0), collection };
 
     return parsedResults;
   }

@@ -16,14 +16,14 @@ export class NoteService {
   /**
    * Get all resources.
    * @param {CollectionRequestParams} options
-   * @returns {Promise<FormattedCollectionResult>}
+   * @returns {Promise<FormattedCollectionResult<Note>>}
    */
-  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult> {
+  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult<Note>> {
 
     const { page, perPage, order, sortBy, where } = options;
 
     const { total, collection } = await this.repository.findAll({ page, perPage, where, sortBy, order });
-    const parsedResults: FormattedCollectionResult = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
+    const parsedResults: FormattedCollectionResult<Note> = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
 
     return parsedResults;
   }

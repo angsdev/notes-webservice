@@ -16,14 +16,14 @@ export class NoteTypeService {
   /**
    * Get all resources.
    * @param {CollectionRequestParams} options
-   * @returns {Promise<FormattedCollectionResult>}
+   * @returns {Promise<FormattedCollectionResult<NoteType>>}
    */
-  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult> {
+  async getAll(options: CollectionRequestParams = {}): Promise<FormattedCollectionResult<NoteType>> {
 
     const { page, perPage, order, sortBy, where } = options;
 
     const { total, collection } = await this.repository.findAll({ page, perPage, where, sortBy, order });
-    const parsedResults: FormattedCollectionResult = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
+    const parsedResults: FormattedCollectionResult<NoteType> = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
 
     return parsedResults;
   }

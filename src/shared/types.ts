@@ -1,9 +1,6 @@
 import http from "http";
 import { Request as ExpressRequest } from 'express';
-
-/**** OLD ****/
-import { PopulateOptions, QueryOptions, Document } from 'mongoose';
-/**** OLD ****/
+import { PopulateOptions } from 'mongoose';
 
 /* General */
 
@@ -117,7 +114,6 @@ export interface EnvironmentConfig {
 
 /* Involving third-parties libraries */
 
-
 export interface UserInfo {
   id?: string;
   authenticated: boolean;
@@ -137,13 +133,6 @@ export interface CollectionRequestParams {
 
 export interface CollectionOptions extends CollectionRequestParams, IsFilterable, IsPopulable { }
 
-
-// export interface ResourcesCollectionOptions extends CollectionRequestParams, IsFilterable, IsPopulable {
-// }
-
-export interface CustomQueryOptions extends QueryOptions, IsFilterable { }
-
-
 export interface IsFilterable {
   filter?: string[];
 }
@@ -152,68 +141,14 @@ export interface IsPopulable {
   populate?: string|string[]|PopulateOptions | PopulateOptions[];
 }
 
-export interface CanManageMany {
-  many?: boolean;
-}
-export type ManageMany = CanManageMany;
 
-// export interface Postable {}
-
-
-
-
-
-
-/**** OLD ****/
-
-
-
-
-
-
-
-
-
-
-// export interface SingleResourceOptions extends IsPopulable, IsFilterable { };
-
-export interface SingleUpdateResourceOptions extends IsPopulable {
-  many?: boolean;
-  new?: boolean;
-  timestamps?: boolean;
-}
-
-// export interface SingleResourceOptions extends IsPopulable, IsFilterable {
-
-// }
-
-export interface HasMongoIdFormat {
-  _id: unknown;
-}
 
 export interface CollectionResult<T, IdType = unknown> {
   total: number;
   collection: (T & IdType)[];
 }
 
-export interface Entity {}
-
-export interface FormattedCollectionResult extends CollectionResult<Entity> {
+export interface FormattedCollectionResult<T> extends CollectionResult<T> {
   page: number;
   pages: number;
  }
-
-// export interface SingleSubResourceIdentifiers {
-//   [subName: string]: string;
-// }
-
-// export type ModelIdentifiers = {
-//   [x: string]: string|object;
-// }
-
-
-
-// export type Credentials = {
-//   username: string;
-//   password: string;
-// }
