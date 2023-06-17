@@ -45,6 +45,16 @@ export class UserService {
   }
 
   /**
+   * Get one resource by any of given fields.
+   * @param {string} id
+   * @returns {Promise<IUser>}
+   */
+  async getById(id: string): Promise<User> {
+
+    return this.getByIndex(id);
+  }
+
+  /**
    * Create a resource.
    * @param {User} data
    * @returns {Promise<User>}

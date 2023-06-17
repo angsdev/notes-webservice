@@ -40,17 +40,18 @@ export class AuthController {
 
       const { page, perPage, order, sortBy, ...where } = req.query;
       const { collection, term } = await parseParams(req.params);
+      const moduleClassName = collection.replace(/^./, (c) => c.toUpperCase() );
 
-      const moduleChosen = Object.keys(collections).find(val => val.includes(collection))
-      if(!moduleChosen) throw new NotFoundError();
+      const moduleDir = Object.keys(collections).find(val => val.includes(collection))
+      if(!moduleDir) throw new NotFoundError();
 
-      const repositoryModule = await import(`../../${collections[moduleChosen]}/persistence/mongo`)
-      const repository = new repositoryModule.Repository();
+      const repositoryModule = await import(`../../${collections[moduleDir]}/infrastructure/persistence/mongo`);
+      const repository = new repositoryModule[`${moduleClassName}MongoRepository`]();
 
-      const serviceModule = await import(`../../${collections[moduleChosen]}`);
-      const service = new serviceModule.Service(repository)
+      const serviceModule = await import(`../../${collections[moduleDir]}/application`);
+      const service = new serviceModule[`${moduleClassName}Service`](repository)
 
-      const method = `find${(term) ? 'ById' : 'All'}`;
+      const method = `get${(term) ? 'ById' : 'All'}`;
       const data = await service[method](term || { page, perPage, order, sortBy, where });
 
       return res.json({ success: true, content: data });
