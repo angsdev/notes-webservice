@@ -1,15 +1,56 @@
 version: '3.1'
 services:
   api:
-    build:
-      # context: .
-      dockerfile: ./dockerfile
-    volumes:
+    container_name: notes-api
+    build: .
+    ports:
+      - '80:80'
+    environment:
+      - APP_NAME=
+      - SERVER_PORT=80
+      - NODE_ENV=production
+      - NODE_CONFIG_DIR=./dist/config
+      - SECRET_OR_PRIVATE_KEY=
+      - DB_MONGODB_HOST=
+      - DB_MONGODB_PORT=
+      - DB_MONGODB_NAME=
+      - DB_MONGODB_USERNAME=
+      - DB_MONGODB_PASSWORD=
+      - CACHE_REDIS_HOST=
+      - CACHE_REDIS_PORT=
+      - CACHE_REDIS_NAME=
+      - CACHE_REDIS_USERNAME=
+      - CACHE_REDIS_PASSWORD=
+      - MAIL_FROM_NAME=
+      - MAIL_FROM_ADDRESS=
+      - MAIL_ETHEREAL_HOST=smtp.ethereal.email
+      - MAIL_ETHEREAL_PORT=587
+      - MAIL_ETHEREAL_USERNAME=
+      - MAIL_ETHEREAL_PASSWORD=
+      - GOOGLE_CLIENT_ID=
+      - GOOGLE_SECRET_ID=
+    depends_on:
+     - db
+     - cache
+    # volumes:
       # - ./:/app
       # - /app/node_modules
-    ports:
-      - "8000:8000"
-    environment:
-      # - NODE_ENV=development
-      # - PORT=9000
     command: "npm run start"
+
+  cache:
+    image: redis:7
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass
+    # volumes:
+    #   - cache:/data
+
+  db:
+    image: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example

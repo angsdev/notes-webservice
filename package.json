@@ -27,6 +27,7 @@
     "mongoose": "^6.1.10",
     "morgan": "^1.10.0",
     "nodemailer": "^6.7.2",
+    "redis": "^4.6.7",
     "rotating-file-stream": "^3.0.3",
     "winston": "^3.6.0"
   },
@@ -34,8 +35,8 @@
     "@faker-js/faker": "^6.0.0-alpha.7",
     "@types/bcryptjs": "^2.4.2",
     "@types/compression": "^1.7.2",
-    "@types/cookie-parser": "^1.4.2",
     "@types/config": "^0.0.41",
+    "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",

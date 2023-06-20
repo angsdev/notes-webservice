@@ -34,6 +34,22 @@ export = {
       password: process.env.DB_MYSQL_PASSWORD
     }
   },
+  cache: {
+    redis: {
+      host: `redis://${(process.env.CACHE_REDIS_HOST || 'localhost')}`,
+      port: (process.env.CACHE_REDIS_PORT || 6379),
+      name: (process.env.CACHE_REDIS_NAME || 'example'),
+      username: process.env.CACHE_REDIS_USERNAME,
+      password: process.env.CACHE_REDIS_PASSWORD
+    },
+    memcached: {
+      host: `memcached://${(process.env.CACHE_MEMCACHED_HOST || 'localhost')}`,
+      port: (process.env.CACHE_MEMCACHED_PORT || 11211),
+      name: (process.env.CACHE_MEMCACHED_NAME || 'example'),
+      username: process.env.CACHE_MEMCACHED_USERNAME,
+      password: process.env.CACHE_MEMCACHED_PASSWORD
+    }
+  },
   mail: {
     from: {
       address: process.env.MAIL_FROM_ADDRESS,

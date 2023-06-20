@@ -1,18 +1,25 @@
+import config from "config";
 import { Router } from 'express';
 import { validate } from '../../shared';
 import { mongo } from './persistence';
 import { UserService } from '../application';
 import { UserController } from './user.controller';
 import { userValidationSchemas } from './user.validation';
+import { CacheEnvironmentConfig } from '../../../../shared/types';
+import { services } from "../../shared";
 
+
+const redisConfig = config.get<CacheEnvironmentConfig>('cache.redis');
 const router = Router();
+const { cache } = services;
 const {
   getAllSchema, getSchema, storeSchema, updateSchema, destroySchema,
   getAllNotesSchema, getNoteSchema, storeNoteSchema, updateNoteSchema, destroyNoteSchema
 } = userValidationSchemas;
 
 const repository = new mongo.UserMongoRepository();
-const service = new UserService(repository);
+const cacheManager = new cache.RedisCacheManager({ url: redisConfig.host });
+const service = new UserService(repository, cacheManager);
 const controller = new UserController(service);
 
 router.get('/', validate(getAllSchema), controller.getAll)

@@ -1,16 +1,20 @@
 import { DTO } from './note.dto';
 import { Note, NoteRepository } from '../domain';
+import { CacheManager } from '../../../../shared/services/cache';
 import { errors, CollectionRequestParams, FormattedCollectionResult } from '../../shared';
 
 const { NotFoundError } = errors;
 
+
 export class NoteService {
 
   constructor(
-    private readonly repository: NoteRepository
+    private readonly repository: NoteRepository,
+    private readonly cache?: CacheManager
   ){
 
     this.repository = repository;
+    this.cache = cache;
   }
 
   /**
@@ -22,9 +26,14 @@ export class NoteService {
 
     const { page, perPage, order, sortBy, where } = options;
 
+    const cacheKey = `note:all?page=${page}&perPage=${perPage}&order=${order}&sortBy=${sortBy}&where=${where}`;
+    const cachedResult = await this.cache?.get<FormattedCollectionResult<Note>>(cacheKey);
+    if(cachedResult) return cachedResult;
+
     const { total, collection } = await this.repository.findAll({ page, perPage, where, sortBy, order });
     const parsedResults: FormattedCollectionResult<Note> = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
 
+    await this.cache?.set(cacheKey, parsedResults, { expirationMs: 60000 });
     return parsedResults;
   }
 
@@ -35,9 +44,14 @@ export class NoteService {
    */
   async getById(id: string): Promise<Note> {
 
-    const note = await this.repository.findById(id);
+    const cacheKey = `note:${id}`;
+    const cachedResult = await this.cache?.get<Note>(cacheKey);
+    if(cachedResult) return cachedResult;
 
+    const note = await this.repository.findById(id);
     if(!note) throw new NotFoundError();
+
+    await this.cache?.set<Note>(cacheKey, note, { expirationMs: 60000 });
     return DTO.single(note);
   }
 

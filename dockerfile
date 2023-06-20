@@ -1,7 +1,7 @@
 FROM node:17-alpine3.14
-RUN mkdir /var/www/html/webservice
-COPY . /var/www/html/webservice/
-WORKDIR /var/www/html/webservice/
+RUN mkdir /app
+COPY . /app
+WORKDIR /app
 RUN npm install
-EXPOSE 8000
+EXPOSE 80
 CMD npm run start

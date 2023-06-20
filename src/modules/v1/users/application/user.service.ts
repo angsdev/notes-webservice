@@ -2,6 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import { DTO } from './user.dto';
 import { Note } from '../../notes/domain';
 import { User, UserRepository } from '../domain';
+import { CacheManager } from '../../../../shared/services/cache';
 import { errors, utils, globalEventEmitter, CollectionRequestParams, FormattedCollectionResult } from '../../shared';
 
 const { Jwt } = utils;
@@ -10,10 +11,12 @@ const { NotFoundError } = errors;
 export class UserService {
 
   constructor(
-    protected readonly repository: UserRepository
+    protected readonly repository: UserRepository,
+    protected readonly cache?: CacheManager
   ){
 
     this.repository = repository;
+    this.cache = cache;
   }
 
   /**
@@ -25,9 +28,14 @@ export class UserService {
 
     const { page, perPage, order, sortBy, where } = options;
 
+    const cacheKey = `user:all?page=${page}&perPage=${perPage}&order=${order}&sortBy=${sortBy}&where=${where}`;
+    const cachedResult = await this.cache?.get<FormattedCollectionResult<User>>(cacheKey);
+    if(cachedResult) return cachedResult;
+
     const { total, collection } = await this.repository.findAll({ page, perPage, where, sortBy, order });
     const parsedResults: FormattedCollectionResult<User> = { total, page, pages: (Math.ceil(total/perPage) || 0), collection: DTO.multiple(collection) };
 
+    await this.cache?.set(cacheKey, parsedResults, { expirationMs: 60000 });
     return parsedResults;
   }
 
@@ -38,9 +46,14 @@ export class UserService {
    */
   async getByIndex(index: string): Promise<User> {
 
-    const user = await this.repository.findByIndex(index);
+    const cacheKey = `user:${index}`;
+    const cachedResult = await this.cache?.get<User>(cacheKey);
+    if(cachedResult) return cachedResult;
 
+    const user = await this.repository.findByIndex(index);
     if(!user) throw new NotFoundError();
+
+    await this.cache?.set<User>(cacheKey, user, { expirationMs: 60000 });
     return DTO.single(user);
   }
 
@@ -111,9 +124,14 @@ export class UserService {
 
     const { page, perPage, order, sortBy, where } = options;
 
+    const cacheKey = `user-${index}-note:all?page=${page}&perPage=${perPage}&order=${order}&sortBy=${sortBy}&where=${where}`;
+    const cachedResult = await this.cache?.get<FormattedCollectionResult<Note>>(cacheKey);
+    if(cachedResult) return cachedResult;
+
     const { total, collection } = await this.repository.findAllNotes(index, { page, perPage, where: where, sortBy, order });
     const parsedResults: FormattedCollectionResult<Note> = { total, page, pages: (Math.ceil(total/perPage) || 0), collection };
 
+    await this.cache?.set(cacheKey, parsedResults, { expirationMs: 60000 });
     return parsedResults;
   }
 
@@ -125,9 +143,14 @@ export class UserService {
    */
   async getNote(index: string, noteId: string): Promise<Note> {
 
-    const note = await this.repository.findNoteById(index, noteId);
+    const cacheKey = `user-${index}-note:${noteId}`;
+    const cachedResult = await this.cache?.get<Note>(cacheKey);
+    if(cachedResult) return cachedResult;
 
+    const note = await this.repository.findNoteById(index, noteId);
     if(!note) throw new NotFoundError();
+
+    await this.cache?.set<Note>(cacheKey, note, { expirationMs: 60000 });
     return note;
   }
 

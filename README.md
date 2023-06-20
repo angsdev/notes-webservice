@@ -21,8 +21,11 @@
 - JWT authentication.
 - Google authentication.
 - Mail handling.
-- Containerizable (docker-compose and dockerfile working soon).
+- Containerizable.
 - Flexible search module.
+- Application of best principles and practices as SOLID, YAGNI, KISS, DRY
+- Repository pattern to switch databases quickly.
+- Redis Cacheable but easy changeable to other like Memcached.
 - Soft deleting and more...
 
 To initialize the project run ```npm install```.

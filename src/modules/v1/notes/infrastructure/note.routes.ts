@@ -1,11 +1,17 @@
+import config from "config";
 import { Router } from 'express';
 import { validate } from '../../shared';
 import { mongo } from './persistence';
 import { NoteService } from '../application';
 import { NoteController } from './note.controller';
 import { noteValidationSchemas } from './note.validation';
+import { CacheEnvironmentConfig } from '../../../../shared/types';
+import { services } from "../../shared";
 
+
+const redisConfig = config.get<CacheEnvironmentConfig>('cache.redis');
 const router = Router();
+const { cache } = services;
 const {
   showAllSchema,
   showSchema,
@@ -15,7 +21,8 @@ const {
 } = noteValidationSchemas;
 
 const repository = new mongo.NoteMongoRepository();
-const service = new NoteService(repository);
+const cacheManager = new cache.RedisCacheManager({ url: redisConfig.host });
+const service = new NoteService(repository, cacheManager);
 const controller = new NoteController(service);
 
 router.get('/', validate(showAllSchema), controller.getAll)

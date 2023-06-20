@@ -1,6 +1,8 @@
 import http from "http";
 import { Request as ExpressRequest } from 'express';
 import { PopulateOptions } from 'mongoose';
+import { RedisClientType, RedisDefaultModules, RedisFunctions, RedisModules, RedisScripts } from 'redis';
+
 
 /* General */
 
@@ -9,6 +11,10 @@ export type ObjectOfAnyValue = { [key: string]: any };
 export type TargetToSelect = ObjectOfAnyValue;
 
 export type ObjectOfStringValues = { [key: string]: string; };
+
+export type CacheValue = Record<string, unknown> | string | number | boolean
+
+export type RedisClient = RedisClientType<RedisDefaultModules & RedisModules, RedisFunctions, RedisScripts>;
 
 /* Base Options */
 
@@ -63,6 +69,10 @@ export interface DatabaseEnvironmentConfig extends SecuredServiceConnectionConfi
   name: string;
 }
 
+export interface CacheEnvironmentConfig extends SecuredServiceConnectionConfig {
+  name: string;
+}
+
 export interface MailMetaData {
   version: string;
   token: string;
@@ -103,12 +113,16 @@ export interface EnvironmentConfig {
     mongodb?: DatabaseEnvironmentConfig;
     mysql?: DatabaseEnvironmentConfig;
   };
+  cache: {
+    redis?: CacheEnvironmentConfig;
+    memcached?: CacheEnvironmentConfig;
+  };
   mail?: MailerEnvironmentConfig;
   logger?: {
     morgan?: {
       format: string;
     }
-  }
+  };
 }
 
 
