@@ -8,7 +8,6 @@ export class UserController {
     private readonly service: UserService
   ){
 
-    this.service = service;
   }
 
   /**

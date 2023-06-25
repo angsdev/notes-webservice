@@ -1,14 +1,12 @@
 #!/usr/bin/env node
-/*============================ Imports ============================*/
 import 'dotenv/config';
 import http from "http";
 import app from './app';
 import config from 'config';
-/*============================ Vars setup ============================*/
-const { port = 80 } : any = config.get('server');
-/*=========================== Rest =============================*/
 
+const { port = 80 } : any = config.get('server');
 const Server = new http.Server(app);
+
 Server.listen(port , () => console.info('Server initialized.'))
       .on('error', (err: Error & any) => {
 

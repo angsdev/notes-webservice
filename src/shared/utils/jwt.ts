@@ -1,4 +1,4 @@
-import { sign, verify, SignOptions, JwtPayload } from 'jsonwebtoken';
+import { JwtPayload, SignOptions, sign, verify } from 'jsonwebtoken';
 import { ObjectOfAnyValue } from '..';
 
 

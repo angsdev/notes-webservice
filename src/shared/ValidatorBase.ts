@@ -1,6 +1,6 @@
 /*============================ Imports ============================*/
+import { NextFunction, Request, Response } from 'express';
 import * as expressValidator from 'express-validator';
-import { Request, Response, NextFunction } from 'express';
 /*============================ Rest ============================*/
 
 export default class ValidatorBase {

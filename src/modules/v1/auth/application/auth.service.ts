@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from 'jsonwebtoken';
+import { errors, globalEventEmitter, utils } from '../../shared';
 import { DTO, UserService } from '../../users/application';
-import { errors, utils, globalEventEmitter } from '../../shared';
 import { User, UserRepository, UserSignInOptions } from '../../users/domain';
 
 const { Jwt, googleAuth } = utils;
@@ -11,7 +11,7 @@ const { NotFoundError, UnauthorizedError } = errors;
 export class AuthService extends UserService {
 
   constructor(
-    protected repository: UserRepository
+    protected readonly repository: UserRepository
   ){
 
     super(repository);

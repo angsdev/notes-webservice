@@ -1,4 +1,4 @@
-import { MailMetaData }from "../../../";
+import { MailMetaData } from "../../../";
 
 /**
  * Template for verify email.

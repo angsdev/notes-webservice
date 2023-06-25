@@ -1,5 +1,5 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import { BaseError, NotFoundError, ErrorHandler } from '../errors';
+import { BaseError, ErrorHandler, NotFoundError } from '../errors';
 
 const errorHandler = new ErrorHandler();
 

@@ -1,9 +1,9 @@
 import * as bcrypt from 'bcryptjs';
-import { DTO } from './user.dto';
-import { Note } from '../../notes/domain';
-import { User, UserRepository } from '../domain';
 import { CacheManager } from '../../../../shared/services/cache';
-import { errors, utils, globalEventEmitter, CollectionRequestParams, FormattedCollectionResult } from '../../shared';
+import { Note } from '../../notes/domain';
+import { CollectionRequestParams, FormattedCollectionResult, errors, globalEventEmitter, utils } from '../../shared';
+import { User, UserRepository } from '../domain';
+import { DTO } from './user.dto';
 
 const { Jwt } = utils;
 const { NotFoundError } = errors;
@@ -15,8 +15,6 @@ export class UserService {
     protected readonly cache?: CacheManager
   ){
 
-    this.repository = repository;
-    this.cache = cache;
   }
 
   /**

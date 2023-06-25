@@ -1,6 +1,6 @@
 import { Document, Types } from 'mongoose';
-import { User } from './user.entity';
 import { NoteDocument } from '../../notes/domain';
+import { User } from './user.entity';
 
 
 export interface UserSignInOptions {

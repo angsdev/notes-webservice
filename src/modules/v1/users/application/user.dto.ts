@@ -1,5 +1,5 @@
-import { User } from '../domain';
 import { utils } from '../../shared';
+import { User } from '../domain';
 
 const { filterObject } = utils;
 

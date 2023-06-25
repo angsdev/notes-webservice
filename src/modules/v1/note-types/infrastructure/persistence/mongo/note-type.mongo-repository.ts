@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
+import { CollectionOptions, CollectionResult } from '../../../../shared';
+import { NoteType, NoteTypeDocument, NoteTypeRepository } from '../../../domain';
 import { NoteTypeMongoModel } from './note-type.mongo-model';
-import { NoteType, NoteTypeRepository, NoteTypeDocument } from '../../../domain';
-import { CollectionOptions, CollectionResult } from '../../../../shared'
 
 
 export class NoteTypeMongoRepository implements NoteTypeRepository {
@@ -9,7 +9,7 @@ export class NoteTypeMongoRepository implements NoteTypeRepository {
   constructor(
     private readonly model: Model<NoteTypeDocument> = NoteTypeMongoModel
   ){
-    this.model = model;
+
   }
 
   async findAll(options?: CollectionOptions): Promise<CollectionResult<NoteType>> {

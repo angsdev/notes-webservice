@@ -1,7 +1,7 @@
-import { DTO } from './note.dto';
-import { Note, NoteRepository } from '../domain';
 import { CacheManager } from '../../../../shared/services/cache';
-import { errors, CollectionRequestParams, FormattedCollectionResult } from '../../shared';
+import { CollectionRequestParams, FormattedCollectionResult, errors } from '../../shared';
+import { Note, NoteRepository } from '../domain';
+import { DTO } from './note.dto';
 
 const { NotFoundError } = errors;
 
@@ -13,8 +13,6 @@ export class NoteService {
     private readonly cache?: CacheManager
   ){
 
-    this.repository = repository;
-    this.cache = cache;
   }
 
   /**

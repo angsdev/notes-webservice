@@ -5,10 +5,9 @@ import { NoteService } from '../application';
 export class NoteController {
 
   constructor(
-    private service: NoteService
+    private readonly service: NoteService
   ){
 
-    this.service = service;
   }
 
   /**

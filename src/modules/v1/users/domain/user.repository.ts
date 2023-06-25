@@ -1,6 +1,6 @@
-import { User } from './user.entity';
 import { Note } from '../../notes/domain/note.entity';
 import { CollectionOptions, CollectionResult } from "../../shared";
+import { User } from './user.entity';
 
 export interface UserRepository {
 

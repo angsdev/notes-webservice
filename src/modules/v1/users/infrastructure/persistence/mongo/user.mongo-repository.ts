@@ -1,8 +1,8 @@
 import { Model } from 'mongoose';
 import { Note } from '../../../../notes/domain';
-import { UserMongoModel } from './user.mongo-model';
-import { User, UserDocument, UserRepository } from '../../../domain';
 import { CollectionOptions, CollectionResult, TargetToSelect } from '../../../../shared';
+import { User, UserDocument, UserRepository } from '../../../domain';
+import { UserMongoModel } from './user.mongo-model';
 
 
 export class UserMongoRepository implements UserRepository {
@@ -11,7 +11,6 @@ export class UserMongoRepository implements UserRepository {
     private readonly model: Model<UserDocument> = UserMongoModel
   ){
 
-    this.model = model;
   }
 
   async findAll(options: CollectionOptions = {}): Promise<CollectionResult<User>> {

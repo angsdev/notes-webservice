@@ -1,5 +1,5 @@
-import { NoteType } from "./note-type.entity";
 import { CollectionOptions, CollectionResult } from "../../shared";
+import { NoteType } from "./note-type.entity";
 
 export interface NoteTypeRepository {
 

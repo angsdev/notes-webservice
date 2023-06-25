@@ -9,7 +9,7 @@ export class NoteMongoRepository implements NoteRepository {
   constructor(
     private readonly model: Model<NoteDocument> = NoteMongoModel
   ){
-    this.model = model;
+
   }
 
   async findAll(options?: CollectionOptions): Promise<CollectionResult<Note>> {

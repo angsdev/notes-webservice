@@ -1,12 +1,11 @@
 import config from "config";
 import { Router } from 'express';
-import { validate } from '../../shared';
-import { mongo } from './persistence';
+import { CacheEnvironmentConfig } from '../../../../shared/types';
+import { services, validate } from '../../shared';
 import { UserService } from '../application';
+import { mongo } from './persistence';
 import { UserController } from './user.controller';
 import { userValidationSchemas } from './user.validation';
-import { CacheEnvironmentConfig } from '../../../../shared/types';
-import { services } from "../../shared";
 
 
 const redisConfig = config.get<CacheEnvironmentConfig>('cache.redis');

@@ -1,5 +1,5 @@
 import config from 'config';
-import { SenderMailInformation, MailHandler, services } from '../shared';
+import { MailHandler, SenderMailInformation, services } from '../shared';
 
 const { address }: SenderMailInformation = config.get('mail.from');
 const { mailer, templates: { resetPasswordTemplate } } = services.mail;

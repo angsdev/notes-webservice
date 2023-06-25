@@ -1,10 +1,10 @@
-import cors from 'cors';
+import compression from 'compression';
 import config from 'config';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import express from 'express';
-import compression from 'compression';
-import cookieParser from 'cookie-parser';
 import routes from './routes';
 import { middlewares } from './shared';
 import initSubscribers from './subscribers';

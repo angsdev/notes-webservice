@@ -5,10 +5,9 @@ import { AuthService } from '../application';
 export  class AuthController {
 
   constructor(
-    private service: AuthService
+    private readonly service: AuthService
   ){
 
-    this.service = service;
   }
 
   /**

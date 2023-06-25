@@ -1,5 +1,5 @@
-import { NoteType } from '../domain';
 import { utils } from '../../shared';
+import { NoteType } from '../domain';
 
 const { filterObject } = utils;
 
